@@ -16,7 +16,7 @@ struct EditPoemView: View {
         self.poem = poem
         _title = State(initialValue: poem.title)
         _author = State(initialValue: poem.author)
-        _dynasty = State(initialValue: poem.dynasty)
+        _dynasty = State(initialValue: DatabaseManager.dynastyToTraditional[poem.dynasty] ?? poem.dynasty)
         _content = State(initialValue: poem.content)
     }
 
@@ -34,7 +34,7 @@ struct EditPoemView: View {
                     TextField("标题", text: $title)
                     TextField("作者", text: $author)
                     Picker("朝代", selection: $dynasty) {
-                        ForEach(DatabaseManager.dynastyList, id: \.self) { d in
+                        ForEach(DatabaseManager.dynastyNames, id: \.self) { d in
                             Text(d).tag(d)
                         }
                     }

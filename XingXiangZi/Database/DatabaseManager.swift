@@ -211,19 +211,63 @@ final class DatabaseManager: ObservableObject {
         return Poem(id: id, title: title, author: author, dynasty: dynasty, content: content)
     }
 
-    static let dynastyList = [
-        "先秦", "秦", "汉", "西汉", "东汉",
-        "三国", "魏", "蜀", "吴",
-        "晋", "西晋", "东晋",
-        "南北朝", "南朝", "北朝",
-        "隋", "唐", "五代", "五代十国",
-        "北宋", "南宋",
-        "辽", "金", "元", "明", "清",
-        "近代", "近现代", "现代", "当代"
+    static let dynastyList: [(Int, [String])] = [
+        (0,  ["先秦"]),
+        (1,  ["秦"]),
+        (2,  ["汉", "漢"]),
+        (3,  ["西汉", "西漢"]),
+        (4,  ["东汉", "東漢"]),
+        (5,  ["三国", "三國"]),
+        (6,  ["魏"]),
+        (7,  ["蜀"]),
+        (8,  ["吴", "吳"]),
+        (9,  ["晋", "晉"]),
+        (10, ["西晋", "西晉"]),
+        (11, ["东晋", "東晉"]),
+        (12, ["南北朝"]),
+        (13, ["南朝"]),
+        (14, ["北朝"]),
+        (15, ["隋"]),
+        (16, ["唐"]),
+        (17, ["五代"]),
+        (18, ["五代十国", "五代十國"]),
+        (19, ["北宋"]),
+        (20, ["南宋"]),
+        (21, ["辽", "遼"]),
+        (22, ["金"]),
+        (23, ["元"]),
+        (24, ["明"]),
+        (25, ["清"]),
+        (26, ["近代"]),
+        (27, ["近现代", "近現代"]),
+        (28, ["现代", "現代"]),
+        (29, ["当代", "當代"])
     ]
 
+    /// Traditional Chinese dynasty names for use in pickers, in chronological order.
+    /// For each group, the last name is the traditional form.
+    static let dynastyNames: [String] = dynastyList.map { $0.1.last! }
+
+    /// Maps any dynasty name (simplified or traditional) to its traditional form.
+    static let dynastyToTraditional: [String: String] = {
+        var dict: [String: String] = [:]
+        for (_, names) in dynastyList {
+            let traditional = names.last!
+            for name in names {
+                dict[name] = traditional
+            }
+        }
+        return dict
+    }()
+
     private static let dynastyOrder: [String: Int] = {
-        Dictionary(uniqueKeysWithValues: dynastyList.enumerated().map { ($1, $0) })
+        var dict: [String: Int] = [:]
+        for (order, names) in dynastyList {
+            for name in names {
+                dict[name] = order
+            }
+        }
+        return dict
     }()
 
     static func dynastySortKey(_ dynasty: String) -> (Int, String) {

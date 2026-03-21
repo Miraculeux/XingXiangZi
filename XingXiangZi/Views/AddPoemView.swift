@@ -23,7 +23,7 @@ struct AddPoemView: View {
                     TextField("标题", text: $title)
                     TextField("作者", text: $author)
                     Picker("朝代", selection: $dynasty) {
-                        ForEach(DatabaseManager.dynastyList, id: \.self) { d in
+                        ForEach(DatabaseManager.dynastyNames, id: \.self) { d in
                             Text(d).tag(d)
                         }
                     }
