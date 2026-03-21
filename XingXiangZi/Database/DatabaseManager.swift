@@ -23,7 +23,7 @@ final class DatabaseManager: ObservableObject {
     // MARK: - Database Setup
 
     private static let seedVersionKey = "DatabaseSeedVersion"
-    private static let currentSeedVersion = 1
+    private static let currentSeedVersion = 2
 
     /// Import seed poems into the database if not already done.
     private func seedIfNeeded() {
