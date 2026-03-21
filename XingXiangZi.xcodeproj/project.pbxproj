@@ -20,10 +20,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		02F83C407A9879DA1A3446B6 /* seed.sqlite3 */ = {isa = PBXFileReference; path = seed.sqlite3; sourceTree = "<group>"; };
-		467FC9F34ED908A8BDA54532 /* XingXiangZi.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		02F83C407A9879DA1A3446B6 /* seed.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; path = seed.sqlite3; sourceTree = "<group>"; };
+		467FC9F34ED908A8BDA54532 /* XingXiangZi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
-		E1A2B3C4D5E6F70891234568 /* EditPoemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPoemView.swift; sourceTree = "<group>"; };
 		6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XingXiangZiApp.swift; sourceTree = "<group>"; };
 		7899E60373E33109554A4ADC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		954B69E197849041F3CC6EA9 /* PoemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoemDetailView.swift; sourceTree = "<group>"; };
@@ -31,6 +30,7 @@
 		A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPoemView.swift; sourceTree = "<group>"; };
 		AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		CD69A29BDCD7A18058790C5B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E1A2B3C4D5E6F70891234568 /* EditPoemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPoemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -120,11 +120,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
-				TargetAttributes = {
-					75692886BF9DA2DD9E5310F6 = {
-						DevelopmentTeam = "";
-					};
-				};
 			};
 			buildConfigurationList = E35A8508F35BC2E2DE9104B6 /* Build configuration list for PBXProject "XingXiangZi" */;
 			developmentRegion = en;
@@ -299,9 +294,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7PAQPQ4423;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -316,6 +312,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.miraculeux.XingXiangZi;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -328,9 +325,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7PAQPQ4423;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -345,6 +343,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.miraculeux.XingXiangZi;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
