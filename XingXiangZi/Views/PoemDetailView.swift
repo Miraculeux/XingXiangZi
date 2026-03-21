@@ -5,8 +5,8 @@ struct PoemDetailView: View {
     let poem: Poem
     var onEdit: (() -> Void)?
 
-    @State private var isSpeaking = false
     @StateObject private var speaker = PoemSpeaker()
+    @State private var selectedLanguage: SpeechLanguage = .cantonese
 
     var body: some View {
         ScrollView {
@@ -35,12 +35,20 @@ struct PoemDetailView: View {
                     }
                     .buttonStyle(.plain)
 
+                    Picker("", selection: $selectedLanguage) {
+                        ForEach(SpeechLanguage.allCases) { lang in
+                            Text(lang.label).tag(lang)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .fixedSize()
+
                     Button {
                         if speaker.isSpeaking {
                             speaker.stop()
                         } else {
                             let text = "\(poem.title)。\(poem.author)。\(poem.content)"
-                            speaker.speak(text)
+                            speaker.speak(text, language: selectedLanguage)
                         }
                     } label: {
                         Image(systemName: speaker.isSpeaking ? "stop.circle" : "play.circle")
@@ -74,8 +82,22 @@ struct PoemDetailView: View {
     }
 }
 
+enum SpeechLanguage: String, CaseIterable, Identifiable {
+    case cantonese = "zh-HK"
+    case mandarin = "zh-CN"
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .cantonese: return "粤语"
+        case .mandarin: return "普通话"
+        }
+    }
+}
+
 final class PoemSpeaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
-    private let synthesizer = AVSpeechSynthesizer()
+    private nonisolated(unsafe) let synthesizer = AVSpeechSynthesizer()
     @Published var isSpeaking = false
 
     override init() {
@@ -83,9 +105,9 @@ final class PoemSpeaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
         synthesizer.delegate = self
     }
 
-    func speak(_ text: String) {
+    func speak(_ text: String, language: SpeechLanguage) {
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: "zh-CN")
+        utterance.voice = AVSpeechSynthesisVoice(language: language.rawValue)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.8
         synthesizer.speak(utterance)
         isSpeaking = true
