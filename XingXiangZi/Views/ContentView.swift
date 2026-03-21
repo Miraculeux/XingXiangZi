@@ -4,6 +4,7 @@ struct ContentView: View {
     @StateObject private var dbManager = DatabaseManager.shared
     @State private var selectedPoem: Poem?
     @State private var showingAddPoem = false
+    @State private var showingEditPoem = false
     @State private var searchText = ""
 
     var body: some View {
@@ -25,7 +26,9 @@ struct ContentView: View {
             .navigationTitle("行香子")
         } detail: {
             if let poem = selectedPoem {
-                PoemDetailView(poem: poem)
+                PoemDetailView(poem: poem) {
+                    showingEditPoem = true
+                }
             } else {
                 VStack(spacing: 12) {
                     Image(systemName: "book.closed")
@@ -39,6 +42,17 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingAddPoem) {
             AddPoemView(dbManager: dbManager)
+        }
+        .sheet(isPresented: $showingEditPoem, onDismiss: {
+            // Refresh selectedPoem from updated data
+            if let current = selectedPoem,
+               let updated = dbManager.poems.first(where: { $0.id == current.id }) {
+                selectedPoem = updated
+            }
+        }) {
+            if let poem = selectedPoem {
+                EditPoemView(dbManager: dbManager, poem: poem)
+            }
         }
     }
 }

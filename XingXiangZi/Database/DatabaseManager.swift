@@ -211,18 +211,19 @@ final class DatabaseManager: ObservableObject {
         return Poem(id: id, title: title, author: author, dynasty: dynasty, content: content)
     }
 
+    static let dynastyList = [
+        "先秦", "秦", "汉", "西汉", "东汉",
+        "三国", "魏", "蜀", "吴",
+        "晋", "西晋", "东晋",
+        "南北朝", "南朝", "北朝",
+        "隋", "唐", "五代", "五代十国",
+        "北宋", "南宋",
+        "辽", "金", "元", "明", "清",
+        "近代", "近现代", "现代", "当代"
+    ]
+
     private static let dynastyOrder: [String: Int] = {
-        let ordered = [
-            "先秦", "秦", "汉", "西汉", "东汉",
-            "三国", "魏", "蜀", "吴",
-            "晋", "西晋", "东晋",
-            "南北朝", "南朝", "北朝",
-            "隋", "唐", "五代", "五代十国",
-            "宋", "北宋", "南宋",
-            "辽", "金", "元", "明", "清",
-            "近代", "近现代", "现代", "当代"
-        ]
-        return Dictionary(uniqueKeysWithValues: ordered.enumerated().map { ($1, $0) })
+        Dictionary(uniqueKeysWithValues: dynastyList.enumerated().map { ($1, $0) })
     }()
 
     static func dynastySortKey(_ dynasty: String) -> (Int, String) {

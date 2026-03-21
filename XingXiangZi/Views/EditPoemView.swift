@@ -1,13 +1,24 @@
 import SwiftUI
 
-struct AddPoemView: View {
+struct EditPoemView: View {
     @ObservedObject var dbManager: DatabaseManager
     @Environment(\.dismiss) private var dismiss
 
-    @State private var title = ""
-    @State private var author = ""
-    @State private var dynasty = "北宋"
-    @State private var content = ""
+    let poem: Poem
+
+    @State private var title: String
+    @State private var author: String
+    @State private var dynasty: String
+    @State private var content: String
+
+    init(dbManager: DatabaseManager, poem: Poem) {
+        self.dbManager = dbManager
+        self.poem = poem
+        _title = State(initialValue: poem.title)
+        _author = State(initialValue: poem.author)
+        _dynasty = State(initialValue: poem.dynasty)
+        _content = State(initialValue: poem.content)
+    }
 
     private var isValid: Bool {
         !title.trimmingCharacters(in: .whitespaces).isEmpty &&
@@ -34,7 +45,7 @@ struct AddPoemView: View {
                         .frame(minHeight: 200)
                 }
             }
-            .navigationTitle("添加诗词")
+            .navigationTitle("编辑诗词")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
@@ -46,13 +57,14 @@ struct AddPoemView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("保存") {
-                        let poem = Poem(
+                        let updated = Poem(
+                            id: poem.id,
                             title: title.trimmingCharacters(in: .whitespaces),
                             author: author.trimmingCharacters(in: .whitespaces),
                             dynasty: dynasty.trimmingCharacters(in: .whitespaces),
                             content: content.trimmingCharacters(in: .whitespaces)
                         )
-                        dbManager.addPoem(poem)
+                        dbManager.updatePoem(updated)
                         dismiss()
                     }
                     .disabled(!isValid)
