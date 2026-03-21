@@ -7,6 +7,10 @@ struct ContentView: View {
     @State private var showingEditPoem = false
     @State private var searchText = ""
 
+    @State private var autoPlay = false
+    @State private var playbackMode: PlaybackMode = .single
+    @State private var selectedLanguage: SpeechLanguage = .cantonese
+
     var body: some View {
         NavigationSplitView {
             SidebarView(
@@ -26,11 +30,13 @@ struct ContentView: View {
             .navigationTitle("行香子")
         } detail: {
             if let poem = selectedPoem {
-                PoemDetailView(poem: poem, poems: dbManager.poems, onEdit: {
+                PoemDetailView(poem: poem, poems: dbManager.poems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, onEdit: {
                     showingEditPoem = true
-                }, onNavigate: { newPoem in
+                }, onNavigate: { newPoem, shouldAutoPlay in
+                    autoPlay = shouldAutoPlay
                     selectedPoem = newPoem
                 })
+                .id(poem.id)
             } else {
                 VStack(spacing: 12) {
                     Image(systemName: "book.closed")
