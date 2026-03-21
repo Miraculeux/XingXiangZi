@@ -211,15 +211,38 @@ final class DatabaseManager: ObservableObject {
         return Poem(id: id, title: title, author: author, dynasty: dynasty, content: content)
     }
 
+    private static let dynastyOrder: [String: Int] = {
+        let ordered = [
+            "先秦", "秦", "汉", "西汉", "东汉",
+            "三国", "魏", "蜀", "吴",
+            "晋", "西晋", "东晋",
+            "南北朝", "南朝", "北朝",
+            "隋", "唐", "五代", "五代十国",
+            "宋", "北宋", "南宋",
+            "辽", "金", "元", "明", "清",
+            "近代", "近现代", "现代", "当代"
+        ]
+        return Dictionary(uniqueKeysWithValues: ordered.enumerated().map { ($1, $0) })
+    }()
+
+    static func dynastySortKey(_ dynasty: String) -> (Int, String) {
+        if let order = dynastyOrder[dynasty] {
+            return (order, dynasty)
+        }
+        return (Int.max, dynasty)
+    }
+
     private func buildGroups() {
         var dynastyDict: [String: [String: [Poem]]] = [:]
         for poem in poems {
             dynastyDict[poem.dynasty, default: [:]][poem.author, default: []].append(poem)
         }
-        dynastyGroups = dynastyDict.keys.sorted().map { dynasty in
+        dynastyGroups = dynastyDict.keys.sorted {
+            DatabaseManager.dynastySortKey($0) < DatabaseManager.dynastySortKey($1)
+        }.map { dynasty in
             let authorDict = dynastyDict[dynasty]!
             let authors = authorDict.keys.sorted().map { author in
-                AuthorGroup(author: author, poems: authorDict[author]!)
+                AuthorGroup(author: author, poems: authorDict[author]!.sorted { $0.title < $1.title })
             }
             return DynastyGroup(dynasty: dynasty, authors: authors)
         }

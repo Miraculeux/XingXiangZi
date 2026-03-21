@@ -80,10 +80,12 @@ struct SidebarView: View {
         for poem in poems {
             dynastyDict[poem.dynasty, default: [:]][poem.author, default: []].append(poem)
         }
-        return dynastyDict.keys.sorted().map { dynasty in
+        return dynastyDict.keys.sorted {
+            DatabaseManager.dynastySortKey($0) < DatabaseManager.dynastySortKey($1)
+        }.map { dynasty in
             let authorDict = dynastyDict[dynasty]!
             let authors = authorDict.keys.sorted().map { author in
-                AuthorGroup(author: author, poems: authorDict[author]!)
+                AuthorGroup(author: author, poems: authorDict[author]!.sorted { $0.title < $1.title })
             }
             return DynastyGroup(dynasty: dynasty, authors: authors)
         }
