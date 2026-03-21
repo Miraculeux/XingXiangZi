@@ -1,0 +1,44 @@
+import SwiftUI
+
+struct ContentView: View {
+    @StateObject private var dbManager = DatabaseManager.shared
+    @State private var selectedPoem: Poem?
+    @State private var showingAddPoem = false
+    @State private var searchText = ""
+
+    var body: some View {
+        NavigationSplitView {
+            SidebarView(
+                dbManager: dbManager,
+                selectedPoem: $selectedPoem,
+                searchText: $searchText
+            )
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingAddPoem = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .navigationTitle("行香子")
+        } detail: {
+            if let poem = selectedPoem {
+                PoemDetailView(poem: poem)
+            } else {
+                VStack(spacing: 12) {
+                    Image(systemName: "book.closed")
+                        .font(.system(size: 60))
+                        .foregroundColor(.secondary)
+                    Text("选择一首诗词")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .sheet(isPresented: $showingAddPoem) {
+            AddPoemView(dbManager: dbManager)
+        }
+    }
+}
