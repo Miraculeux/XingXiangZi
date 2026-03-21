@@ -145,6 +145,12 @@ final class PoemSpeaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
     }
 
     func speak(_ text: String, language: SpeechLanguage) {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to configure audio session: \(error)")
+        }
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language.rawValue)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.8
