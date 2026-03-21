@@ -26,9 +26,11 @@ struct ContentView: View {
             .navigationTitle("行香子")
         } detail: {
             if let poem = selectedPoem {
-                PoemDetailView(poem: poem) {
+                PoemDetailView(poem: poem, poems: dbManager.poems, onEdit: {
                     showingEditPoem = true
-                }
+                }, onNavigate: { newPoem in
+                    selectedPoem = newPoem
+                })
             } else {
                 VStack(spacing: 12) {
                     Image(systemName: "book.closed")

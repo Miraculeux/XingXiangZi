@@ -3,10 +3,26 @@ import SwiftUI
 
 struct PoemDetailView: View {
     let poem: Poem
+    let poems: [Poem]
     var onEdit: (() -> Void)?
+    var onNavigate: ((Poem) -> Void)?
 
     @StateObject private var speaker = PoemSpeaker()
     @State private var selectedLanguage: SpeechLanguage = .cantonese
+
+    private var currentIndex: Int? {
+        poems.firstIndex(of: poem)
+    }
+
+    private var previousPoem: Poem? {
+        guard let idx = currentIndex, idx > 0 else { return nil }
+        return poems[idx - 1]
+    }
+
+    private var nextPoem: Poem? {
+        guard let idx = currentIndex, idx < poems.count - 1 else { return nil }
+        return poems[idx + 1]
+    }
 
     var body: some View {
         ScrollView {
@@ -76,6 +92,29 @@ struct PoemDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
+        .toolbar {
+            ToolbarItemGroup(placement: .automatic) {
+                Button {
+                    if let prev = previousPoem {
+                        speaker.stop()
+                        onNavigate?(prev)
+                    }
+                } label: {
+                    Image(systemName: "chevron.left")
+                }
+                .disabled(previousPoem == nil)
+
+                Button {
+                    if let next = nextPoem {
+                        speaker.stop()
+                        onNavigate?(next)
+                    }
+                } label: {
+                    Image(systemName: "chevron.right")
+                }
+                .disabled(nextPoem == nil)
+            }
+        }
         .onDisappear {
             speaker.stop()
         }
