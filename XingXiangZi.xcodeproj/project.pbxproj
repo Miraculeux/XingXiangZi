@@ -15,9 +15,11 @@
 		DA0C09D6E612807BCC00BAC3 /* PoemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954B69E197849041F3CC6EA9 /* PoemDetailView.swift */; };
 		ED303F1AEDB4ECD11754EE85 /* Poem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D1C23B71B0E6693FEBD428 /* Poem.swift */; };
 		FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD69A29BDCD7A18058790C5B /* Assets.xcassets */; };
+		FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 02F83C407A9879DA1A3446B6 /* seed.sqlite3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02F83C407A9879DA1A3446B6 /* seed.sqlite3 */ = {isa = PBXFileReference; path = seed.sqlite3; sourceTree = "<group>"; };
 		467FC9F34ED908A8BDA54532 /* XingXiangZi.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XingXiangZiApp.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				CD69A29BDCD7A18058790C5B /* Assets.xcassets */,
+				02F83C407A9879DA1A3446B6 /* seed.sqlite3 */,
 				6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */,
 				CE32A0C5547839251A1F711A /* Database */,
 				8D8D128EE8F64BEB3D08CD76 /* Models */,
@@ -145,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */,
+				FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

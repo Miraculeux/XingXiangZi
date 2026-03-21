@@ -10,6 +10,7 @@ final class DatabaseManager: ObservableObject {
     @Published var dynastyGroups: [DynastyGroup] = []
 
     private init() {
+        seedIfNeeded()
         openDatabase()
         createTable()
         loadPoems()
@@ -20,6 +21,64 @@ final class DatabaseManager: ObservableObject {
     }
 
     // MARK: - Database Setup
+
+    private static let seedVersionKey = "DatabaseSeedVersion"
+    private static let currentSeedVersion = 1
+
+    /// Import seed poems into the database if not already done.
+    private func seedIfNeeded() {
+        let defaults = UserDefaults.standard
+        if defaults.integer(forKey: DatabaseManager.seedVersionKey) >= DatabaseManager.currentSeedVersion {
+            return
+        }
+
+        let destURL = DatabaseManager.databaseURL()
+
+        if !FileManager.default.fileExists(atPath: destURL.path) {
+            // No database yet — just copy the bundled one
+            if let bundledURL = Bundle.main.url(forResource: "seed", withExtension: "sqlite3") {
+                try? FileManager.default.copyItem(at: bundledURL, to: destURL)
+            }
+        } else {
+            // Database exists (may have user data) — merge seed poems into it
+            importSeedPoems(into: destURL)
+        }
+
+        defaults.set(DatabaseManager.currentSeedVersion, forKey: DatabaseManager.seedVersionKey)
+    }
+
+    /// Import poems from the bundled seed database into the existing user database.
+    private func importSeedPoems(into destURL: URL) {
+        guard let bundledURL = Bundle.main.url(forResource: "seed", withExtension: "sqlite3") else { return }
+
+        var destDb: OpaquePointer?
+        guard sqlite3_open(destURL.path, &destDb) == SQLITE_OK else { return }
+        defer { sqlite3_close(destDb) }
+
+        // Ensure table exists
+        let createSQL = "CREATE TABLE IF NOT EXISTS poems (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, author TEXT NOT NULL, dynasty TEXT NOT NULL, content TEXT NOT NULL);"
+        sqlite3_exec(destDb, createSQL, nil, nil, nil)
+
+        // Attach the seed database
+        var errMsg: UnsafeMutablePointer<CChar>?
+        let attachSQL = "ATTACH DATABASE '\(bundledURL.path)' AS seed;"
+        guard sqlite3_exec(destDb, attachSQL, nil, nil, &errMsg) == SQLITE_OK else {
+            if let errMsg { sqlite3_free(errMsg) }
+            return
+        }
+
+        // Insert seed poems that don't already exist (by title + author)
+        let insertSQL = """
+            INSERT INTO poems (title, author, dynasty, content)
+            SELECT s.title, s.author, s.dynasty, s.content
+            FROM seed.poems s
+            WHERE NOT EXISTS (
+                SELECT 1 FROM poems p WHERE p.title = s.title AND p.author = s.author
+            );
+            """
+        sqlite3_exec(destDb, insertSQL, nil, nil, nil)
+        sqlite3_exec(destDb, "DETACH DATABASE seed;", nil, nil, nil)
+    }
 
     private func openDatabase() {
         let fileURL = DatabaseManager.databaseURL()
