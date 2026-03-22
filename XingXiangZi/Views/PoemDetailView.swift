@@ -89,7 +89,10 @@ struct PoemDetailView: View {
                 // Content
                 HighlightedPoemText(
                     content: poem.content,
-                    speaker: speaker
+                    speaker: speaker,
+                    onPlayFromParagraph: { paragraphIndex in
+                        startSpeakingFromParagraph(paragraphIndex)
+                    }
                 )
                 .padding(.horizontal, 20)
 
@@ -157,6 +160,32 @@ struct PoemDetailView: View {
             }
         }
     }
+
+    private func startSpeakingFromParagraph(_ paragraphIndex: Int) {
+        let paragraphs = poem.content.components(separatedBy: "\n")
+        guard paragraphIndex < paragraphs.count else { return }
+        let textFromParagraph = paragraphs[paragraphIndex...].joined(separator: "\n")
+        let skippedChars = poem.content.count - textFromParagraph.count
+        let poemId = poem.id
+        speaker.speak(textFromParagraph, language: selectedLanguage, contentOffset: 0, title: poem.title, author: "【\(poem.dynasty)】\(poem.author)", contentSkipOffset: skippedChars) {
+            switch self.playbackMode {
+            case .single:
+                break
+            case .repeatOne:
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    guard self.poem.id == poemId else { return }
+                    self.startSpeaking()
+                }
+            case .next:
+                if let next = self.nextPoem {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        guard self.poem.id == poemId else { return }
+                        self.onNavigate?(next, true)
+                    }
+                }
+            }
+        }
+    }
 }
 
 enum PlaybackMode: String, CaseIterable, Identifiable {
@@ -200,44 +229,91 @@ enum SpeechLanguage: String, CaseIterable, Identifiable {
 private struct HighlightedPoemText: View {
     let content: String
     @ObservedObject var speaker: PoemSpeaker
+    var onPlayFromParagraph: ((Int) -> Void)?
+
+    private var paragraphs: [String] {
+        content.components(separatedBy: "\n")
+    }
 
     /// Map the speaker's spoken range (in full text) to a range in `content`.
     private var highlightRange: Range<String.Index>? {
         guard let spokenRange = speaker.spokenRange,
               let contentStart = speaker.contentStartIndex,
               let fullText = speaker.currentText else { return nil }
-        // Only highlight if the spoken range overlaps the content portion
         let contentEnd = fullText.endIndex
         let overlapLower = max(spokenRange.lowerBound, contentStart)
         let overlapUpper = min(spokenRange.upperBound, contentEnd)
         guard overlapLower < overlapUpper else { return nil }
-        // Convert to content-local offsets
         let localLower = fullText.distance(from: contentStart, to: overlapLower)
         let localUpper = fullText.distance(from: contentStart, to: overlapUpper)
         guard localLower >= 0, localUpper >= localLower else { return nil }
-        let lo = content.index(content.startIndex, offsetBy: localLower, limitedBy: content.endIndex) ?? content.endIndex
-        let hi = content.index(content.startIndex, offsetBy: localUpper, limitedBy: content.endIndex) ?? content.endIndex
+        // Offset into the full content string (accounting for skipped paragraphs)
+        let skipOffset = speaker.contentSkipOffset
+        let contentLocalLower = localLower + skipOffset
+        let contentLocalUpper = localUpper + skipOffset
+        let lo = content.index(content.startIndex, offsetBy: contentLocalLower, limitedBy: content.endIndex) ?? content.endIndex
+        let hi = content.index(content.startIndex, offsetBy: contentLocalUpper, limitedBy: content.endIndex) ?? content.endIndex
         guard lo <= hi, hi <= content.endIndex else { return nil }
         return lo..<hi
     }
 
     var body: some View {
-        if let range = highlightRange {
-            let before = content[content.startIndex..<range.lowerBound]
-            let spoken = content[range]
-            let after = content[range.upperBound..<content.endIndex]
-            (Text(before)
-                + Text(spoken).foregroundColor(.accentColor).bold()
-                + Text(after))
-                .font(.title3)
-                .lineSpacing(10)
-                .multilineTextAlignment(.center)
-        } else {
-            Text(content)
-                .font(.title3)
-                .lineSpacing(10)
-                .multilineTextAlignment(.center)
+        let paras = paragraphs
+        VStack(alignment: .center, spacing: 16) {
+            ForEach(Array(paras.enumerated()), id: \.offset) { index, paragraph in
+                HStack(alignment: .top, spacing: 8) {
+                    Button {
+                        onPlayFromParagraph?(index)
+                    } label: {
+                        Image(systemName: "play.circle")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .buttonStyle(.plain)
+
+                    highlightedText(for: paragraph, paragraphIndex: index)
+                        .font(.title3)
+                        .lineSpacing(10)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                }
+            }
         }
+    }
+
+    private func highlightedText(for paragraph: String, paragraphIndex: Int) -> Text {
+        guard let range = highlightRange else {
+            return Text(paragraph)
+        }
+        // Calculate the start/end of this paragraph within full content
+        var charOffset = 0
+        for i in 0..<paragraphIndex {
+            charOffset += paragraphs[i].count + 1 // +1 for \n
+        }
+        let paraStart = content.index(content.startIndex, offsetBy: charOffset)
+        let paraEnd = content.index(paraStart, offsetBy: paragraph.count, limitedBy: content.endIndex) ?? content.endIndex
+
+        // Check if highlight overlaps this paragraph
+        guard range.lowerBound < paraEnd, range.upperBound > paraStart else {
+            return Text(paragraph)
+        }
+
+        let hlStart = max(range.lowerBound, paraStart)
+        let hlEnd = min(range.upperBound, paraEnd)
+
+        let localStart = content.distance(from: paraStart, to: hlStart)
+        let localEnd = content.distance(from: paraStart, to: hlEnd)
+
+        let pStart = paragraph.startIndex
+        let lo = paragraph.index(pStart, offsetBy: localStart, limitedBy: paragraph.endIndex) ?? paragraph.endIndex
+        let hi = paragraph.index(pStart, offsetBy: localEnd, limitedBy: paragraph.endIndex) ?? paragraph.endIndex
+
+        guard lo < hi else { return Text(paragraph) }
+
+        let before = paragraph[pStart..<lo]
+        let spoken = paragraph[lo..<hi]
+        let after = paragraph[hi..<paragraph.endIndex]
+        return Text(before) + Text(spoken).foregroundColor(.accentColor).bold() + Text(after)
     }
 }
 
@@ -255,6 +331,8 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
     private(set) var currentText: String?
     private(set) var contentStartIndex: String.Index?
     private var contentOffset: Int = 0
+    /// Number of characters in the full content that were skipped (for paragraph playback)
+    @Published private(set) var contentSkipOffset: Int = 0
     private var isPaused = false
 
     // Now Playing
@@ -417,12 +495,13 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
 
     // MARK: - Speak / Stop
 
-    func speak(_ text: String, language: SpeechLanguage, contentOffset: Int = 0, title: String = "", author: String = "", onFinish: (() -> Void)? = nil) {
+    func speak(_ text: String, language: SpeechLanguage, contentOffset: Int = 0, title: String = "", author: String = "", contentSkipOffset: Int = 0, onFinish: (() -> Void)? = nil) {
         stop()
         self.onFinish = onFinish
         self.currentText = text
         self.contentOffset = contentOffset
         self.contentStartIndex = text.index(text.startIndex, offsetBy: contentOffset, limitedBy: text.endIndex)
+        self.contentSkipOffset = contentSkipOffset
         self.poemTitle = title
         self.poemAuthor = author
         self.isPaused = false
@@ -461,6 +540,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         onFinish = nil
         currentText = nil
         contentStartIndex = nil
+        contentSkipOffset = 0
         isSpeaking = false
         spokenRange = nil
         playbackStartTime = nil
@@ -498,7 +578,10 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        // Only reset state if no new speak session has started
+        let gen = self.speakGeneration
         DispatchQueue.main.async {
+            guard self.speakGeneration == gen else { return }
             self.isSpeaking = false
             self.spokenRange = nil
         }
@@ -544,10 +627,14 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         }
 
         // Schedule all buffers; completion on the last one
+        let generation = speakGeneration
         for (i, buf) in renderBuffers.enumerated() {
             if i == renderBuffers.count - 1 {
                 playerNode.scheduleBuffer(buf, completionCallbackType: .dataPlayedBack) { [weak self] _ in
-                    DispatchQueue.main.async { self?.playbackDidFinish() }
+                    DispatchQueue.main.async {
+                        guard let self, self.speakGeneration == generation else { return }
+                        self.playbackDidFinish()
+                    }
                 }
             } else {
                 playerNode.scheduleBuffer(buf)
