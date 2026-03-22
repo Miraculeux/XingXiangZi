@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var searchText = ""
 
     @State private var autoPlay = false
+    @State private var navigatingViaAutoPlay = false
     @State private var playbackMode: PlaybackMode = .single
     @State private var selectedLanguage: SpeechLanguage = .cantonese
     @State private var sidebarGrouping: SidebarGrouping = .dynasty
@@ -36,6 +37,7 @@ struct ContentView: View {
                 PoemDetailView(poem: poem, poems: dbManager.poems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, speaker: speaker, onEdit: {
                     showingEditPoem = true
                 }, onNavigate: { newPoem, shouldAutoPlay in
+                    navigatingViaAutoPlay = shouldAutoPlay
                     autoPlay = shouldAutoPlay
                     selectedPoem = newPoem
                 })
@@ -49,6 +51,13 @@ struct ContentView: View {
                         .font(.title2)
                         .foregroundColor(.secondary)
                 }
+            }
+        }
+        .onChange(of: selectedPoem) {
+            if navigatingViaAutoPlay {
+                navigatingViaAutoPlay = false
+            } else {
+                autoPlay = false
             }
         }
         .sheet(isPresented: $showingAddPoem) {

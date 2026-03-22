@@ -137,17 +137,20 @@ struct PoemDetailView: View {
     private func startSpeaking() {
         let prefix = "\(poem.title)。\(poem.author)。"
         let text = prefix + poem.content
+        let poemId = poem.id
         speaker.speak(text, language: selectedLanguage, contentOffset: prefix.count, title: poem.title, author: "【\(poem.dynasty)】\(poem.author)") {
             switch self.playbackMode {
             case .single:
                 break
             case .repeatOne:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    guard self.poem.id == poemId else { return }
                     self.startSpeaking()
                 }
             case .next:
                 if let next = self.nextPoem {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        guard self.poem.id == poemId else { return }
                         self.onNavigate?(next, true)
                     }
                 }
@@ -248,6 +251,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
     @Published var isSpeaking = false
     @Published var spokenRange: Range<String.Index>?
     private var onFinish: (() -> Void)?
+    private var speakGeneration: Int = 0
     private(set) var currentText: String?
     private(set) var contentStartIndex: String.Index?
     private var contentOffset: Int = 0
@@ -429,6 +433,8 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         }
 
         renderBuffers = []
+        speakGeneration += 1
+        let generation = speakGeneration
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language.rawValue)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.8
@@ -438,6 +444,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         // write() renders speech to PCM buffers on a background thread
         synthesizer.write(utterance) { [weak self] buffer in
             guard let self,
+                  self.speakGeneration == generation,
                   let pcm = buffer as? AVAudioPCMBuffer,
                   pcm.frameLength > 0 else { return }
             self.renderBuffers.append(pcm)
@@ -445,6 +452,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
     }
 
     func stop() {
+        speakGeneration += 1
         synthesizer.stopSpeaking(at: .immediate)
         playerNode.stop()
         stopHighlightTimer()
@@ -499,6 +507,10 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
     // MARK: - AVAudioEngine Playback
 
     private func playViaEngine() {
+        guard currentText != nil else {
+            renderBuffers = []
+            return
+        }
         guard let firstBuf = renderBuffers.first else {
             print("[TTS] no buffers to play")
             isSpeaking = false
