@@ -10,13 +10,15 @@ struct ContentView: View {
     @State private var autoPlay = false
     @State private var playbackMode: PlaybackMode = .single
     @State private var selectedLanguage: SpeechLanguage = .cantonese
+    @State private var sidebarGrouping: SidebarGrouping = .dynasty
 
     var body: some View {
         NavigationSplitView {
             SidebarView(
                 dbManager: dbManager,
                 selectedPoem: $selectedPoem,
-                searchText: $searchText
+                searchText: $searchText,
+                grouping: $sidebarGrouping
             )
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {

@@ -1,4 +1,5 @@
 import AVFoundation
+import MediaPlayer
 import SwiftUI
 
 struct PoemDetailView: View {
@@ -198,36 +199,101 @@ final class PoemSpeaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
     private nonisolated(unsafe) let synthesizer = AVSpeechSynthesizer()
     @Published var isSpeaking = false
     private var onFinish: (() -> Void)?
+    private var currentText: String?
+    private var currentLanguage: SpeechLanguage?
 
     override init() {
         super.init()
         synthesizer.delegate = self
+        setupAudioSession()
+        setupRemoteCommands()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleInterruption),
+            name: AVAudioSession.interruptionNotification,
+            object: AVAudioSession.sharedInstance()
+        )
     }
 
-    func speak(_ text: String, language: SpeechLanguage, onFinish: (() -> Void)? = nil) {
-        self.onFinish = onFinish
+    private func setupAudioSession() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
             print("Failed to configure audio session: \(error)")
         }
+    }
+
+    private func setupRemoteCommands() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { [weak self] _ in
+            if let self, let text = self.currentText, let lang = self.currentLanguage, !self.isSpeaking {
+                self.speak(text, language: lang, onFinish: self.onFinish)
+            }
+            return .success
+        }
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget { [weak self] _ in
+            self?.stop()
+            return .success
+        }
+        commandCenter.stopCommand.isEnabled = true
+        commandCenter.stopCommand.addTarget { [weak self] _ in
+            self?.stop()
+            return .success
+        }
+    }
+
+    private func updateNowPlaying(title: String) {
+        var info = [String: Any]()
+        info[MPMediaItemPropertyTitle] = title
+        info[MPNowPlayingInfoPropertyPlaybackRate] = isSpeaking ? 1.0 : 0.0
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+    }
+
+    @objc private func handleInterruption(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
+
+        if type == .ended {
+            let options = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
+            if AVAudioSession.InterruptionOptions(rawValue: options).contains(.shouldResume) {
+                setupAudioSession()
+                if let text = currentText, let lang = currentLanguage {
+                    speak(text, language: lang, onFinish: onFinish)
+                }
+            }
+        }
+    }
+
+    func speak(_ text: String, language: SpeechLanguage, onFinish: (() -> Void)? = nil) {
+        self.onFinish = onFinish
+        self.currentText = text
+        self.currentLanguage = language
+        setupAudioSession()
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language.rawValue)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.8
         synthesizer.speak(utterance)
         isSpeaking = true
+        updateNowPlaying(title: String(text.prefix(20)))
     }
 
     func stop() {
         onFinish = nil
+        currentText = nil
+        currentLanguage = nil
         synthesizer.stopSpeaking(at: .immediate)
         isSpeaking = false
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         DispatchQueue.main.async {
             self.isSpeaking = false
+            self.updateNowPlaying(title: "")
             self.onFinish?()
             self.onFinish = nil
         }

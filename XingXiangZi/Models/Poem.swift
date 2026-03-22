@@ -28,3 +28,17 @@ struct AuthorGroup: Identifiable {
     let author: String
     var poems: [Poem]
 }
+
+/// Grouped structure for tree view: Author -> [Poem] (with dynasty info)
+struct AuthorTopGroup: Identifiable {
+    let id = UUID()
+    let author: String
+    var poems: [Poem]
+}
+
+/// Alphabetical section: Letter -> [AuthorTopGroup]
+struct AlphabetAuthorSection: Identifiable {
+    let id = UUID()
+    let letter: String
+    var authors: [AuthorTopGroup]
+}

@@ -8,6 +8,8 @@ final class DatabaseManager: ObservableObject {
 
     @Published var poems: [Poem] = []
     @Published var dynastyGroups: [DynastyGroup] = []
+    @Published var authorTopGroups: [AuthorTopGroup] = []
+    @Published var alphabetAuthorSections: [AlphabetAuthorSection] = []
 
     private init() {
         seedIfNeeded()
@@ -286,10 +288,39 @@ final class DatabaseManager: ObservableObject {
             DatabaseManager.dynastySortKey($0) < DatabaseManager.dynastySortKey($1)
         }.map { dynasty in
             let authorDict = dynastyDict[dynasty]!
-            let authors = authorDict.keys.sorted().map { author in
-                AuthorGroup(author: author, poems: authorDict[author]!.sorted { $0.title < $1.title })
+            let authors = authorDict.keys.sorted { $0.localizedStandardCompare($1) == .orderedAscending }.map { author in
+                AuthorGroup(author: author, poems: authorDict[author]!.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending })
             }
             return DynastyGroup(dynasty: dynasty, authors: authors)
+        }
+
+        var authorDict: [String: [Poem]] = [:]
+        for poem in poems {
+            authorDict[poem.author, default: []].append(poem)
+        }
+        authorTopGroups = authorDict.keys.sorted { $0.localizedStandardCompare($1) == .orderedAscending }.map { author in
+            AuthorTopGroup(author: author, poems: authorDict[author]!.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending })
+        }
+        alphabetAuthorSections = DatabaseManager.buildAlphabetSections(from: authorTopGroups)
+    }
+
+    static func pinyinFirstLetter(of text: String) -> String {
+        guard let first = text.first else { return "#" }
+        let str = NSMutableString(string: String(first))
+        CFStringTransform(str, nil, kCFStringTransformToLatin, false)
+        CFStringTransform(str, nil, kCFStringTransformStripDiacritics, false)
+        let letter = (str as String).prefix(1).uppercased()
+        return letter.first?.isLetter == true ? letter : "#"
+    }
+
+    static func buildAlphabetSections(from groups: [AuthorTopGroup]) -> [AlphabetAuthorSection] {
+        var dict: [String: [AuthorTopGroup]] = [:]
+        for group in groups {
+            let letter = pinyinFirstLetter(of: group.author)
+            dict[letter, default: []].append(group)
+        }
+        return dict.keys.sorted().map { letter in
+            AlphabetAuthorSection(letter: letter, authors: dict[letter]!)
         }
     }
 }
