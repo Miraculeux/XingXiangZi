@@ -8,10 +8,9 @@ struct PoemDetailView: View {
     var autoPlay: Bool = false
     @Binding var playbackMode: PlaybackMode
     @Binding var selectedLanguage: SpeechLanguage
+    @ObservedObject var speaker: PoemSpeaker
     var onEdit: (() -> Void)?
     var onNavigate: ((Poem, Bool) -> Void)?
-
-    @StateObject private var speaker = PoemSpeaker()
 
     private var currentIndex: Int? {
         poems.firstIndex(of: poem)
@@ -88,11 +87,11 @@ struct PoemDetailView: View {
                     .padding(.horizontal, 40)
 
                 // Content
-                Text(poem.content)
-                    .font(.title3)
-                    .lineSpacing(10)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 20)
+                HighlightedPoemText(
+                    content: poem.content,
+                    speaker: speaker
+                )
+                .padding(.horizontal, 20)
 
                 Spacer()
             }
@@ -137,8 +136,9 @@ struct PoemDetailView: View {
     }
 
     private func startSpeaking() {
-        let text = "\(poem.title)。\(poem.author)。\(poem.content)"
-        speaker.speak(text, language: selectedLanguage) {
+        let prefix = "\(poem.title)。\(poem.author)。"
+        let text = prefix + poem.content
+        speaker.speak(text, language: selectedLanguage, contentOffset: prefix.count, title: poem.title, author: "【\(poem.dynasty)】\(poem.author)") {
             switch self.playbackMode {
             case .single:
                 break
@@ -195,105 +195,294 @@ enum SpeechLanguage: String, CaseIterable, Identifiable {
     }
 }
 
-final class PoemSpeaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
-    private nonisolated(unsafe) let synthesizer = AVSpeechSynthesizer()
+private struct HighlightedPoemText: View {
+    let content: String
+    @ObservedObject var speaker: PoemSpeaker
+
+    /// Map the speaker's spoken range (in full text) to a range in `content`.
+    private var highlightRange: Range<String.Index>? {
+        guard let spokenRange = speaker.spokenRange,
+              let contentStart = speaker.contentStartIndex,
+              let fullText = speaker.currentText else { return nil }
+        // Only highlight if the spoken range overlaps the content portion
+        let contentEnd = fullText.endIndex
+        let overlapLower = max(spokenRange.lowerBound, contentStart)
+        let overlapUpper = min(spokenRange.upperBound, contentEnd)
+        guard overlapLower < overlapUpper else { return nil }
+        // Convert to content-local offsets
+        let localLower = fullText.distance(from: contentStart, to: overlapLower)
+        let localUpper = fullText.distance(from: contentStart, to: overlapUpper)
+        guard localLower >= 0, localUpper >= localLower else { return nil }
+        let lo = content.index(content.startIndex, offsetBy: localLower, limitedBy: content.endIndex) ?? content.endIndex
+        let hi = content.index(content.startIndex, offsetBy: localUpper, limitedBy: content.endIndex) ?? content.endIndex
+        guard lo <= hi, hi <= content.endIndex else { return nil }
+        return lo..<hi
+    }
+
+    var body: some View {
+        if let range = highlightRange {
+            let before = content[content.startIndex..<range.lowerBound]
+            let spoken = content[range]
+            let after = content[range.upperBound..<content.endIndex]
+            (Text(before)
+                + Text(spoken).foregroundColor(.accentColor).bold()
+                + Text(after))
+                .font(.title3)
+                .lineSpacing(10)
+                .multilineTextAlignment(.center)
+        } else {
+            Text(content)
+                .font(.title3)
+                .lineSpacing(10)
+                .multilineTextAlignment(.center)
+        }
+    }
+}
+
+final class PoemSpeaker: NSObject, ObservableObject, AVAudioPlayerDelegate, AVSpeechSynthesizerDelegate {
+    private let synthesizer = AVSpeechSynthesizer()
+    private var audioPlayer: AVAudioPlayer?
+    private var highlightTimer: Timer?
+
     @Published var isSpeaking = false
+    @Published var spokenRange: Range<String.Index>?
     private var onFinish: (() -> Void)?
-    private var currentText: String?
-    private var currentLanguage: SpeechLanguage?
+    private(set) var currentText: String?
+    private(set) var contentStartIndex: String.Index?
+    private var contentOffset: Int = 0
+
+    // Now Playing
+    private var poemTitle = ""
+    private var poemAuthor = ""
+
+    // Rendering state
+    private var renderBuffers: [AVAudioPCMBuffer] = []
+    private static let tempFileURL: URL = FileManager.default.temporaryDirectory.appendingPathComponent("xingxiangzi_tts.caf")
 
     override init() {
         super.init()
         synthesizer.delegate = self
-        setupAudioSession()
-        setupRemoteCommands()
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleInterruption),
-            name: AVAudioSession.interruptionNotification,
-            object: AVAudioSession.sharedInstance()
-        )
+        activateSession()
+        configureRemoteCommands()
     }
 
-    private func setupAudioSession() {
+    // MARK: - Audio Session
+
+    private func activateSession() {
+        let session = AVAudioSession.sharedInstance()
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-            try AVAudioSession.sharedInstance().setActive(true)
+            try session.setCategory(.playback, mode: .default)
+            try session.setActive(true, options: [])
         } catch {
-            print("Failed to configure audio session: \(error)")
+            print("Audio session error: \(error)")
         }
     }
 
-    private func setupRemoteCommands() {
-        let commandCenter = MPRemoteCommandCenter.shared()
-        commandCenter.playCommand.isEnabled = true
-        commandCenter.playCommand.addTarget { [weak self] _ in
-            if let self, let text = self.currentText, let lang = self.currentLanguage, !self.isSpeaking {
-                self.speak(text, language: lang, onFinish: self.onFinish)
+    // MARK: - Remote Commands
+
+    private func configureRemoteCommands() {
+        let cc = MPRemoteCommandCenter.shared()
+
+        cc.playCommand.isEnabled = true
+        cc.playCommand.addTarget { [weak self] _ in
+            guard let self, let player = self.audioPlayer else { return .commandFailed }
+            player.play()
+            self.isSpeaking = true
+            self.startHighlightTimer()
+            self.updateNowPlaying()
+            return .success
+        }
+
+        cc.pauseCommand.isEnabled = true
+        cc.pauseCommand.addTarget { [weak self] _ in
+            guard let self else { return .commandFailed }
+            self.audioPlayer?.pause()
+            self.isSpeaking = false
+            self.stopHighlightTimer()
+            self.updateNowPlaying()
+            return .success
+        }
+
+        cc.togglePlayPauseCommand.isEnabled = true
+        cc.togglePlayPauseCommand.addTarget { [weak self] _ in
+            guard let self, let player = self.audioPlayer else { return .commandFailed }
+            if player.isPlaying {
+                player.pause()
+                self.isSpeaking = false
+                self.stopHighlightTimer()
+            } else {
+                player.play()
+                self.isSpeaking = true
+                self.startHighlightTimer()
             }
+            self.updateNowPlaying()
             return .success
         }
-        commandCenter.pauseCommand.isEnabled = true
-        commandCenter.pauseCommand.addTarget { [weak self] _ in
+
+        cc.stopCommand.isEnabled = true
+        cc.stopCommand.addTarget { [weak self] _ in
             self?.stop()
             return .success
         }
-        commandCenter.stopCommand.isEnabled = true
-        commandCenter.stopCommand.addTarget { [weak self] _ in
-            self?.stop()
-            return .success
-        }
+
+        // Disable unused commands so iOS doesn't show them
+        cc.nextTrackCommand.isEnabled = false
+        cc.previousTrackCommand.isEnabled = false
     }
 
-    private func updateNowPlaying(title: String) {
+    // MARK: - Now Playing
+
+    private func setupNowPlaying(duration: TimeInterval, elapsed: TimeInterval, rate: Double) {
         var info = [String: Any]()
-        info[MPMediaItemPropertyTitle] = title
-        info[MPNowPlayingInfoPropertyPlaybackRate] = isSpeaking ? 1.0 : 0.0
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        info[MPMediaItemPropertyTitle] = poemTitle
+        info[MPMediaItemPropertyArtist] = poemAuthor
+        info[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: duration)
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: elapsed)
+        info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: rate)
+        info[MPMediaItemPropertyMediaType] = NSNumber(value: MPNowPlayingInfoMediaType.audio.rawValue)
+        let center = MPNowPlayingInfoCenter.default()
+        center.nowPlayingInfo = info
+        center.playbackState = rate > 0 ? .playing : .paused
     }
 
-    @objc private func handleInterruption(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
-
-        if type == .ended {
-            let options = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
-            if AVAudioSession.InterruptionOptions(rawValue: options).contains(.shouldResume) {
-                setupAudioSession()
-                if let text = currentText, let lang = currentLanguage {
-                    speak(text, language: lang, onFinish: onFinish)
-                }
-            }
+    private func updateNowPlaying() {
+        guard !poemTitle.isEmpty else { return }
+        if let player = audioPlayer {
+            setupNowPlaying(
+                duration: player.duration,
+                elapsed: player.currentTime,
+                rate: player.isPlaying ? 1.0 : 0.0
+            )
+        } else {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+            MPNowPlayingInfoCenter.default().playbackState = .stopped
         }
     }
 
-    func speak(_ text: String, language: SpeechLanguage, onFinish: (() -> Void)? = nil) {
+    // MARK: - Speak / Stop
+
+    func speak(_ text: String, language: SpeechLanguage, contentOffset: Int = 0, title: String = "", author: String = "", onFinish: (() -> Void)? = nil) {
+        stop()
         self.onFinish = onFinish
         self.currentText = text
-        self.currentLanguage = language
-        setupAudioSession()
+        self.contentOffset = contentOffset
+        self.contentStartIndex = text.index(text.startIndex, offsetBy: contentOffset, limitedBy: text.endIndex)
+        self.poemTitle = title
+        self.poemAuthor = author
+        self.isSpeaking = true
+
+        activateSession()
+
+        // Pre-render speech to audio buffers, then play as audio file
+        renderBuffers = []
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language.rawValue)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.8
-        synthesizer.speak(utterance)
-        isSpeaking = true
-        updateNowPlaying(title: String(text.prefix(20)))
+
+        synthesizer.write(utterance) { [weak self] buffer in
+            guard let self = self else { return }
+            guard let pcmBuffer = buffer as? AVAudioPCMBuffer,
+                  pcmBuffer.frameLength > 0 else { return }
+            self.renderBuffers.append(pcmBuffer)
+        }
     }
 
-    func stop() {
-        onFinish = nil
-        currentText = nil
-        currentLanguage = nil
-        synthesizer.stopSpeaking(at: .immediate)
-        isSpeaking = false
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-    }
+    // MARK: - AVSpeechSynthesizerDelegate
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         DispatchQueue.main.async {
+            self.playRenderedAudio()
+        }
+    }
+
+    func stop() {
+        synthesizer.stopSpeaking(at: .immediate)
+        audioPlayer?.stop()
+        audioPlayer = nil
+        stopHighlightTimer()
+        renderBuffers = []
+        onFinish = nil
+        currentText = nil
+        contentStartIndex = nil
+        isSpeaking = false
+        spokenRange = nil
+        let center = MPNowPlayingInfoCenter.default()
+        center.nowPlayingInfo = nil
+        center.playbackState = .stopped
+    }
+
+    // MARK: - Render & Play
+
+    private func playRenderedAudio() {
+        guard let firstBuffer = renderBuffers.first else {
+            isSpeaking = false
+            return
+        }
+
+        let url = PoemSpeaker.tempFileURL
+        do {
+            let audioFile = try AVAudioFile(forWriting: url, settings: firstBuffer.format.settings)
+            for buffer in renderBuffers {
+                try audioFile.write(from: buffer)
+            }
+            renderBuffers = []
+
+            // Force a clean audio session after AVSpeechSynthesizer.write()
+            let session = AVAudioSession.sharedInstance()
+            try? session.setActive(false, options: .notifyOthersOnDeactivation)
+            try session.setCategory(.playback, mode: .default)
+            try session.setActive(true, options: [])
+
+            let player = try AVAudioPlayer(contentsOf: url)
+            player.delegate = self
+            player.prepareToPlay()
+            audioPlayer = player
+
+            // Set Now Playing info BEFORE play() so iOS registers the app
+            setupNowPlaying(duration: player.duration, elapsed: 0, rate: 1.0)
+
+            player.play()
+            startHighlightTimer()
+        } catch {
+            print("Failed to play rendered speech: \(error)")
+            isSpeaking = false
+        }
+    }
+
+    // MARK: - Text Highlight
+
+    private func startHighlightTimer() {
+        stopHighlightTimer()
+        highlightTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { [weak self] _ in
+            self?.updateHighlight()
+        }
+    }
+
+    private func stopHighlightTimer() {
+        highlightTimer?.invalidate()
+        highlightTimer = nil
+    }
+
+    private func updateHighlight() {
+        guard let player = audioPlayer, player.duration > 0,
+              let text = currentText, !text.isEmpty else { return }
+        let progress = player.currentTime / player.duration
+        let charIndex = min(Int(progress * Double(text.count)), text.count - 1)
+        guard charIndex >= 0 else { return }
+        let lo = text.index(text.startIndex, offsetBy: charIndex)
+        let hi = text.index(lo, offsetBy: 1, limitedBy: text.endIndex) ?? text.endIndex
+        spokenRange = lo..<hi
+    }
+
+    // MARK: - AVAudioPlayerDelegate
+
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        DispatchQueue.main.async {
+            self.audioPlayer = nil
+            self.stopHighlightTimer()
             self.isSpeaking = false
-            self.updateNowPlaying(title: "")
+            self.spokenRange = nil
+            self.updateNowPlaying()
             self.onFinish?()
             self.onFinish = nil
         }

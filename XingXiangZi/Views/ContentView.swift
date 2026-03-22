@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var playbackMode: PlaybackMode = .single
     @State private var selectedLanguage: SpeechLanguage = .cantonese
     @State private var sidebarGrouping: SidebarGrouping = .dynasty
+    @StateObject private var speaker = PoemSpeaker()
 
     var body: some View {
         NavigationSplitView {
@@ -32,7 +33,7 @@ struct ContentView: View {
             .navigationTitle("行香子")
         } detail: {
             if let poem = selectedPoem {
-                PoemDetailView(poem: poem, poems: dbManager.poems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, onEdit: {
+                PoemDetailView(poem: poem, poems: dbManager.poems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, speaker: speaker, onEdit: {
                     showingEditPoem = true
                 }, onNavigate: { newPoem, shouldAutoPlay in
                     autoPlay = shouldAutoPlay
