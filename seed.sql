@@ -694,3 +694,8 @@ INSERT INTO poems (title, author, dynasty, content) VALUES ('浪淘沙近', '宋
 扁舟欲解垂楊岸。尚同歡宴。日斜歌闋將分散。倚蘭橈，望水遠、天遠、人遠。');
 
 INSERT INTO poems (title, author, dynasty, content) VALUES ('夢江南·蘭燼落', '皇甫松', '唐', '蘭燼落，屏上暗紅蕉。閑夢江南梅熟日，夜船吹笛雨蕭蕭，人語驛邊橋。');
+
+INSERT INTO poems (title, author, dynasty, content) VALUES ('涉江採芙蓉·古詩十九首之六', '古詩十九首', '漢', '涉江採芙蓉，蘭澤多芳草。
+采之欲遺誰，所思在遠道。
+還顧望舊鄉，長路漫浩浩。
+同心而離居，憂傷以終老。');
