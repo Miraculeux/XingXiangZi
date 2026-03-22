@@ -128,6 +128,8 @@ struct PoemDetailView: View {
         .onAppear {
             if autoPlay {
                 startSpeaking()
+            } else {
+                speaker.stop()
             }
         }
     }

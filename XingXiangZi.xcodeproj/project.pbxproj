@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0A4C4754C82B4A38700F20CF /* AddPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */; };
-		3BF53D67BD30C5CD250CA074 /* Info.plist.bak in Resources */ = {isa = PBXBuildFile; fileRef = 5209AF263D31A39388697F67 /* Info.plist.bak */; };
 		4E6D2FBDFFA11A0F54512A14 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */; };
 		762B38DDE9EFB2B665D89B4E /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */; };
 		91163F5B947D8F7ADDAD3923 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7899E60373E33109554A4ADC /* ContentView.swift */; };
@@ -27,7 +26,6 @@
 		1DE98E4A7AD590BAAB4756DA /* silence.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = silence.wav; sourceTree = "<group>"; };
 		3F1D37273B1B018A16DFB3B1 /* silence.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = silence.caf; sourceTree = "<group>"; };
 		467FC9F34ED908A8BDA54532 /* XingXiangZi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5209AF263D31A39388697F67 /* Info.plist.bak */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Info.plist.bak; sourceTree = "<group>"; };
 		62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XingXiangZiApp.swift; sourceTree = "<group>"; };
 		7899E60373E33109554A4ADC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -88,7 +86,6 @@
 			isa = PBXGroup;
 			children = (
 				CD69A29BDCD7A18058790C5B /* Assets.xcassets */,
-				5209AF263D31A39388697F67 /* Info.plist.bak */,
 				02F83C407A9879DA1A3446B6 /* seed.sqlite3 */,
 				3F1D37273B1B018A16DFB3B1 /* silence.caf */,
 				1DE98E4A7AD590BAAB4756DA /* silence.wav */,
@@ -155,7 +152,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */,
-				3BF53D67BD30C5CD250CA074 /* Info.plist.bak in Resources */,
 				FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */,
 				BEB429D8985B279387E349EF /* silence.caf in Resources */,
 				A8A92B6F9D675AF4434EDCEB /* silence.wav in Resources */,
