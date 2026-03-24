@@ -10,12 +10,21 @@ final class DatabaseManager: ObservableObject {
     @Published var dynastyGroups: [DynastyGroup] = []
     @Published var authorTopGroups: [AuthorTopGroup] = []
     @Published var alphabetAuthorSections: [AlphabetAuthorSection] = []
+    @Published var cipaiList: [CiPai] = []
+    @Published var currentLibrary: Library = Library.defaultLibrary
+
+    /// Current library's table name
+    private var table: String { currentLibrary.id }
 
     private init() {
         seedIfNeeded()
         openDatabase()
         createTable()
+        seedLibrariesIfNeeded()
+        createCiPaiTable()
+        seedCiPaiIfNeeded()
         loadPoems()
+        loadCiPaiList()
     }
 
     deinit {
@@ -112,10 +121,77 @@ final class DatabaseManager: ObservableObject {
         }
     }
 
+    // MARK: - Library Seeding
+
+    private static let librarySeedVersionKey = "LibrarySeedVersion"
+    private static let currentLibrarySeedVersion = 1
+
+    private func seedLibrariesIfNeeded() {
+        let defaults = UserDefaults.standard
+        if defaults.integer(forKey: DatabaseManager.librarySeedVersionKey) >= DatabaseManager.currentLibrarySeedVersion {
+            return
+        }
+
+        for lib in Library.allLibraries {
+            guard let resource = lib.sqlResource else { continue }
+            seedLibraryFromSQL(library: lib, resource: resource)
+        }
+
+        defaults.set(DatabaseManager.currentLibrarySeedVersion, forKey: DatabaseManager.librarySeedVersionKey)
+    }
+
+    private func seedLibraryFromSQL(library: Library, resource: String) {
+        guard let sqlURL = Bundle.main.url(forResource: resource, withExtension: "sql"),
+              let sqlContent = try? String(contentsOf: sqlURL, encoding: .utf8) else { return }
+
+        // Ensure the table exists with the standard poem schema
+        let createSQL = """
+            CREATE TABLE IF NOT EXISTS \(library.id) (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                author TEXT NOT NULL,
+                dynasty TEXT NOT NULL,
+                content TEXT NOT NULL
+            );
+            """
+        sqlite3_exec(db, createSQL, nil, nil, nil)
+
+        // Check if already populated
+        var countStmt: OpaquePointer?
+        if sqlite3_prepare_v2(db, "SELECT COUNT(*) FROM \(library.id);", -1, &countStmt, nil) == SQLITE_OK {
+            if sqlite3_step(countStmt) == SQLITE_ROW && sqlite3_column_int(countStmt, 0) > 0 {
+                sqlite3_finalize(countStmt)
+                return
+            }
+        }
+        sqlite3_finalize(countStmt)
+
+        // Execute INSERT statements, rewriting table name to library.id
+        let statements = sqlContent.components(separatedBy: ";\n").filter { $0.contains("INSERT") }
+        for statement in statements {
+            let trimmed = statement.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else { continue }
+            var errMsg: UnsafeMutablePointer<CChar>?
+            if sqlite3_exec(db, trimmed + ";", nil, nil, &errMsg) != SQLITE_OK {
+                let msg = errMsg.map { String(cString: $0) } ?? "unknown error"
+                print("Failed to seed library \(library.name): \(msg)")
+                sqlite3_free(errMsg)
+            }
+        }
+    }
+
+    // MARK: - Library Switching
+
+    func switchLibrary(_ library: Library) {
+        currentLibrary = library
+        loadPoems()
+    }
+
     // MARK: - CRUD
 
     func addPoem(_ poem: Poem) {
-        let sql = "INSERT INTO poems (title, author, dynasty, content) VALUES (?, ?, ?, ?);"
+        guard currentLibrary.isEditable else { return }
+        let sql = "INSERT INTO \(table) (title, author, dynasty, content) VALUES (?, ?, ?, ?);"
         var stmt: OpaquePointer?
         guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else {
             print("Failed to prepare insert: \(String(cString: sqlite3_errmsg(db)))")
@@ -135,7 +211,8 @@ final class DatabaseManager: ObservableObject {
     }
 
     func deletePoem(id: Int64) {
-        let sql = "DELETE FROM poems WHERE id = ?;"
+        guard currentLibrary.isEditable else { return }
+        let sql = "DELETE FROM \(table) WHERE id = ?;"
         var stmt: OpaquePointer?
         guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return }
         defer { sqlite3_finalize(stmt) }
@@ -145,7 +222,8 @@ final class DatabaseManager: ObservableObject {
     }
 
     func updatePoem(_ poem: Poem) {
-        let sql = "UPDATE poems SET title = ?, author = ?, dynasty = ?, content = ? WHERE id = ?;"
+        guard currentLibrary.isEditable else { return }
+        let sql = "UPDATE \(table) SET title = ?, author = ?, dynasty = ?, content = ? WHERE id = ?;"
         var stmt: OpaquePointer?
         guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return }
         defer { sqlite3_finalize(stmt) }
@@ -163,14 +241,14 @@ final class DatabaseManager: ObservableObject {
     // MARK: - Query
 
     func loadPoems() {
-        poems = fetchPoems(sql: "SELECT id, title, author, dynasty, content FROM poems ORDER BY dynasty, author, title;")
+        poems = fetchPoems(sql: "SELECT id, title, author, dynasty, content FROM \(table) ORDER BY dynasty, author, title;")
         buildGroups()
     }
 
     func search(query: String) -> [Poem] {
         guard !query.isEmpty else { return poems }
         let sql = """
-            SELECT id, title, author, dynasty, content FROM poems
+            SELECT id, title, author, dynasty, content FROM \(table)
             WHERE title LIKE ? OR author LIKE ? OR dynasty LIKE ?
             ORDER BY dynasty, author, title;
             """
@@ -322,5 +400,134 @@ final class DatabaseManager: ObservableObject {
         return dict.keys.sorted().map { letter in
             AlphabetAuthorSection(letter: letter, authors: dict[letter]!)
         }
+    }
+
+    // MARK: - CiPai
+
+    private static let cipaiSeedVersionKey = "CiPaiSeedVersion"
+    private static let currentCiPaiSeedVersion = 2
+
+    private func createCiPaiTable() {
+        let sql = """
+            CREATE TABLE IF NOT EXISTS cipai (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                name_tc TEXT,
+                aliases TEXT,
+                intro TEXT,
+                pattern TEXT,
+                section_count INTEGER,
+                char_count INTEGER,
+                example TEXT
+            );
+            """
+        var errMsg: UnsafeMutablePointer<CChar>?
+        if sqlite3_exec(db, sql, nil, nil, &errMsg) != SQLITE_OK {
+            let msg = errMsg.map { String(cString: $0) } ?? "unknown error"
+            print("Failed to create cipai table: \(msg)")
+            sqlite3_free(errMsg)
+        }
+    }
+
+    private func seedCiPaiIfNeeded() {
+        let defaults = UserDefaults.standard
+        if defaults.integer(forKey: DatabaseManager.cipaiSeedVersionKey) >= DatabaseManager.currentCiPaiSeedVersion {
+            return
+        }
+
+        // Drop and recreate to handle schema changes (cipai data is read-only seed data)
+        sqlite3_exec(db, "DROP TABLE IF EXISTS cipai;", nil, nil, nil)
+        createCiPaiTable()
+
+        guard let sqlURL = Bundle.main.url(forResource: "seed_cipai", withExtension: "sql"),
+              let sqlContent = try? String(contentsOf: sqlURL, encoding: .utf8) else { return }
+
+        // Execute the SQL statements (skip CREATE TABLE since we already have it)
+        let statements = sqlContent.components(separatedBy: ";\n").filter { $0.contains("INSERT") }
+        for statement in statements {
+            let trimmed = statement.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else { continue }
+            var errMsg: UnsafeMutablePointer<CChar>?
+            if sqlite3_exec(db, trimmed + ";", nil, nil, &errMsg) != SQLITE_OK {
+                let msg = errMsg.map { String(cString: $0) } ?? "unknown error"
+                print("Failed to seed cipai: \(msg)")
+                sqlite3_free(errMsg)
+            }
+        }
+
+        defaults.set(DatabaseManager.currentCiPaiSeedVersion, forKey: DatabaseManager.cipaiSeedVersionKey)
+    }
+
+    func loadCiPaiList() {
+        cipaiList = fetchCiPai(sql: "SELECT id, name, name_tc, aliases, intro, pattern, section_count, char_count, example FROM cipai ORDER BY name;")
+    }
+
+    func searchCiPai(query: String) -> [CiPai] {
+        guard !query.isEmpty else { return cipaiList }
+        let sql = """
+            SELECT id, name, name_tc, aliases, intro, pattern, section_count, char_count, example FROM cipai
+            WHERE name LIKE ? OR name_tc LIKE ? OR aliases LIKE ? OR intro LIKE ?
+            ORDER BY name;
+            """
+        let wildcard = "%\(query)%"
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return [] }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_text(stmt, 1, (wildcard as NSString).utf8String, -1, nil)
+        sqlite3_bind_text(stmt, 2, (wildcard as NSString).utf8String, -1, nil)
+        sqlite3_bind_text(stmt, 3, (wildcard as NSString).utf8String, -1, nil)
+        sqlite3_bind_text(stmt, 4, (wildcard as NSString).utf8String, -1, nil)
+
+        var results: [CiPai] = []
+        while sqlite3_step(stmt) == SQLITE_ROW {
+            results.append(readCiPai(from: stmt))
+        }
+        return results
+    }
+
+    func findCiPai(byName name: String) -> CiPai? {
+        let sql = """
+            SELECT id, name, name_tc, aliases, intro, pattern, section_count, char_count, example FROM cipai
+            WHERE name = ? OR name_tc = ? OR (',' || aliases || ',') LIKE ('%,' || ? || ',%')
+            LIMIT 1;
+            """
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return nil }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_text(stmt, 1, (name as NSString).utf8String, -1, nil)
+        sqlite3_bind_text(stmt, 2, (name as NSString).utf8String, -1, nil)
+        sqlite3_bind_text(stmt, 3, (name as NSString).utf8String, -1, nil)
+
+        if sqlite3_step(stmt) == SQLITE_ROW {
+            return readCiPai(from: stmt)
+        }
+        return nil
+    }
+
+    private func fetchCiPai(sql: String) -> [CiPai] {
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return [] }
+        defer { sqlite3_finalize(stmt) }
+
+        var results: [CiPai] = []
+        while sqlite3_step(stmt) == SQLITE_ROW {
+            results.append(readCiPai(from: stmt))
+        }
+        return results
+    }
+
+    private func readCiPai(from stmt: OpaquePointer?) -> CiPai {
+        let id = sqlite3_column_int64(stmt, 0)
+        let name = String(cString: sqlite3_column_text(stmt, 1))
+        let nameTc = sqlite3_column_text(stmt, 2).map { String(cString: $0) }
+        let aliases = sqlite3_column_text(stmt, 3).map { String(cString: $0) }
+        let intro = sqlite3_column_text(stmt, 4).map { String(cString: $0) }
+        let pattern = sqlite3_column_text(stmt, 5).map { String(cString: $0) }
+        let sectionCount = sqlite3_column_type(stmt, 6) != SQLITE_NULL ? Int(sqlite3_column_int(stmt, 6)) : nil
+        let charCount = sqlite3_column_type(stmt, 7) != SQLITE_NULL ? Int(sqlite3_column_int(stmt, 7)) : nil
+        let example = sqlite3_column_text(stmt, 8).map { String(cString: $0) }
+        return CiPai(id: id, name: name, nameTc: nameTc, aliases: aliases, intro: intro, pattern: pattern, sectionCount: sectionCount, charCount: charCount, example: example)
     }
 }

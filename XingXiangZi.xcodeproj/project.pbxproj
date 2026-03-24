@@ -19,6 +19,13 @@
 		ED303F1AEDB4ECD11754EE85 /* Poem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D1C23B71B0E6693FEBD428 /* Poem.swift */; };
 		FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD69A29BDCD7A18058790C5B /* Assets.xcassets */; };
 		FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 02F83C407A9879DA1A3446B6 /* seed.sqlite3 */; };
+		C1A00001CIPAI000000000001 /* CiPai.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002CIPAI000000000001 /* CiPai.swift */; };
+		C1A00001CIPAI000000000002 /* CiPaiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002CIPAI000000000002 /* CiPaiDetailView.swift */; };
+		C1A00001CIPAI000000000003 /* CiPaiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002CIPAI000000000003 /* CiPaiListView.swift */; };
+		C1A00001CIPAI000000000004 /* seed_cipai.sql in Resources */ = {isa = PBXBuildFile; fileRef = C1A00002CIPAI000000000004 /* seed_cipai.sql */; };
+		C1A00001LIB0000000000001 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000001 /* Library.swift */; };
+		C1A00001LIB0000000000002 /* LibrarySwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */; };
+		C1A00001LIB0000000000003 /* seed2.sql in Resources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000003 /* seed2.sql */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +42,13 @@
 		AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPoemView.swift; sourceTree = "<group>"; };
 		CD69A29BDCD7A18058790C5B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C1A00002CIPAI000000000001 /* CiPai.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPai.swift; sourceTree = "<group>"; };
+		C1A00002CIPAI000000000002 /* CiPaiDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPaiDetailView.swift; sourceTree = "<group>"; };
+		C1A00002CIPAI000000000003 /* CiPaiListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPaiListView.swift; sourceTree = "<group>"; };
+		C1A00002CIPAI000000000004 /* seed_cipai.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed_cipai.sql; sourceTree = "<group>"; };
+		C1A00002LIB0000000000001 /* Library.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
+		C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySwitcherView.swift; sourceTree = "<group>"; };
+		C1A00002LIB0000000000003 /* seed2.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed2.sql; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -49,6 +63,8 @@
 		8D8D128EE8F64BEB3D08CD76 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C1A00002CIPAI000000000001 /* CiPai.swift */,
+				C1A00002LIB0000000000001 /* Library.swift */,
 				A4D1C23B71B0E6693FEBD428 /* Poem.swift */,
 			);
 			path = Models;
@@ -58,8 +74,11 @@
 			isa = PBXGroup;
 			children = (
 				A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */,
+				C1A00002CIPAI000000000002 /* CiPaiDetailView.swift */,
+				C1A00002CIPAI000000000003 /* CiPaiListView.swift */,
 				7899E60373E33109554A4ADC /* ContentView.swift */,
 				B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */,
+				C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */,
 				954B69E197849041F3CC6EA9 /* PoemDetailView.swift */,
 				62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */,
 			);
@@ -87,6 +106,8 @@
 			children = (
 				CD69A29BDCD7A18058790C5B /* Assets.xcassets */,
 				02F83C407A9879DA1A3446B6 /* seed.sqlite3 */,
+				C1A00002CIPAI000000000004 /* seed_cipai.sql */,
+				C1A00002LIB0000000000003 /* seed2.sql */,
 				3F1D37273B1B018A16DFB3B1 /* silence.caf */,
 				1DE98E4A7AD590BAAB4756DA /* silence.wav */,
 				6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */,
@@ -153,6 +174,8 @@
 			files = (
 				FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */,
 				FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */,
+				C1A00001CIPAI000000000004 /* seed_cipai.sql in Resources */,
+				C1A00001LIB0000000000003 /* seed2.sql in Resources */,
 				BEB429D8985B279387E349EF /* silence.caf in Resources */,
 				A8A92B6F9D675AF4434EDCEB /* silence.wav in Resources */,
 			);
@@ -173,6 +196,11 @@
 				DA0C09D6E612807BCC00BAC3 /* PoemDetailView.swift in Sources */,
 				4E6D2FBDFFA11A0F54512A14 /* SidebarView.swift in Sources */,
 				CA45BE1EEB81225024E02F85 /* XingXiangZiApp.swift in Sources */,
+				C1A00001CIPAI000000000001 /* CiPai.swift in Sources */,
+				C1A00001CIPAI000000000002 /* CiPaiDetailView.swift in Sources */,
+				C1A00001CIPAI000000000003 /* CiPaiListView.swift in Sources */,
+				C1A00001LIB0000000000001 /* Library.swift in Sources */,
+				C1A00001LIB0000000000002 /* LibrarySwitcherView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

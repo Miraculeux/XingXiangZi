@@ -5,6 +5,7 @@ struct ContentView: View {
     @State private var selectedPoem: Poem?
     @State private var showingAddPoem = false
     @State private var showingEditPoem = false
+    @State private var showingCiPaiList = false
     @State private var searchText = ""
 
     @State private var autoPlay = false
@@ -23,15 +24,44 @@ struct ContentView: View {
                 grouping: $sidebarGrouping
             )
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showingAddPoem = true
+                //ToolbarItem(placement: .primaryAction) {
+                //    Button {
+                //        showingAddPoem = true
+                //    } label: {
+                //        Image(systemName: "plus")
+                //    }
+                //}
+                ToolbarItem(placement: .automatic) {
+                    Menu {
+                        Section("词牌") {
+                            Button {
+                                showingCiPaiList = true
+                            } label: {
+                                Label("词牌大全", systemImage: "text.book.closed")
+                            }
+                        }
+                        Section("词库") {
+                            ForEach(Library.allLibraries) { lib in
+                                Button {
+                                    if dbManager.currentLibrary != lib {
+                                        selectedPoem = nil
+                                        dbManager.switchLibrary(lib)
+                                    }
+                                } label: {
+                                    if dbManager.currentLibrary == lib {
+                                        Label(lib.name, systemImage: "checkmark")
+                                    } else {
+                                        Text(lib.name)
+                                    }
+                                }
+                            }
+                        }
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: "line.3.horizontal")
                     }
                 }
             }
-            .navigationTitle("行香子")
+            .navigationTitle(dbManager.currentLibrary.name)
         } detail: {
             if let poem = selectedPoem {
                 PoemDetailView(poem: poem, poems: dbManager.poems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, speaker: speaker, onEdit: {
@@ -72,6 +102,18 @@ struct ContentView: View {
         }) {
             if let poem = selectedPoem {
                 EditPoemView(dbManager: dbManager, poem: poem)
+            }
+        }
+        .sheet(isPresented: $showingCiPaiList) {
+            NavigationStack {
+                CiPaiListView(dbManager: dbManager)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("关闭") {
+                                showingCiPaiList = false
+                            }
+                        }
+                    }
             }
         }
     }

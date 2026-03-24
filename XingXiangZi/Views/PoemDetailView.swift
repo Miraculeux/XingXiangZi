@@ -11,6 +11,20 @@ struct PoemDetailView: View {
     @ObservedObject var speaker: PoemSpeaker
     var onEdit: (() -> Void)?
     var onNavigate: ((Poem, Bool) -> Void)?
+    @State private var showingCiPaiDetail = false
+
+    /// Extract cipai name from poem title (part before · or full title)
+    private var matchedCiPai: CiPai? {
+        let cipaiName: String
+        if let dotIndex = poem.title.firstIndex(of: "·") {
+            cipaiName = String(poem.title[poem.title.startIndex..<dotIndex])
+        } else if let dotIndex = poem.title.firstIndex(of: "．") {
+            cipaiName = String(poem.title[poem.title.startIndex..<dotIndex])
+        } else {
+            cipaiName = poem.title
+        }
+        return DatabaseManager.shared.findCiPai(byName: cipaiName)
+    }
 
     private var currentIndex: Int? {
         poems.firstIndex(of: poem)
@@ -43,15 +57,25 @@ struct PoemDetailView: View {
                 }
                 .font(.title3)
 
+                // CiPai link
+                if let cipai = matchedCiPai {
+                    Button {
+                        showingCiPaiDetail = true
+                    } label: {
+                        Label("词牌：\(cipai.name)", systemImage: "text.book.closed")
+                            .font(.subheadline)
+                    }
+                }
+
                 // Action icons
                 HStack(spacing: 24) {
-                    Button {
-                        onEdit?()
-                    } label: {
-                        Image(systemName: "square.and.pencil")
-                            .font(.title2)
-                    }
-                    .buttonStyle(.plain)
+                    //Button {
+                    //    onEdit?()
+                    //} label: {
+                    //    Image(systemName: "square.and.pencil")
+                    //        .font(.title2)
+                    //}
+                    //.buttonStyle(.plain)
 
                     Picker("", selection: $selectedLanguage) {
                         ForEach(SpeechLanguage.allCases) { lang in
@@ -133,6 +157,20 @@ struct PoemDetailView: View {
                 startSpeaking()
             } else {
                 speaker.stop()
+            }
+        }
+        .sheet(isPresented: $showingCiPaiDetail) {
+            if let cipai = matchedCiPai {
+                NavigationStack {
+                    CiPaiDetailView(cipai: cipai)
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("关闭") {
+                                    showingCiPaiDetail = false
+                                }
+                            }
+                        }
+                }
             }
         }
     }
