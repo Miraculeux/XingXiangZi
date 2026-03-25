@@ -94,6 +94,7 @@ struct PoemDetailView: View {
                     }
                     .pickerStyle(.menu)
                     .fixedSize()
+                    .tint(.primary)
 
                     Picker("", selection: $playbackMode) {
                         ForEach(PlaybackMode.allCases) { mode in
@@ -103,6 +104,7 @@ struct PoemDetailView: View {
                     .pickerStyle(.menu)
                     .fixedSize()
                     .labelStyle(.iconOnly)
+                    .tint(.primary)
 
                     Button {
                         if speaker.isSpeaking {
@@ -113,6 +115,7 @@ struct PoemDetailView: View {
                     } label: {
                         Image(systemName: speaker.isSpeaking ? "stop.circle" : "play.circle")
                             .font(.title2)
+                            .foregroundColor(.blue)
                     }
                     .buttonStyle(.plain)
                 }

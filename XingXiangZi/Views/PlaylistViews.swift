@@ -261,6 +261,7 @@ struct PlaylistDetailView: View {
                             }
                         } label: {
                             Image(systemName: "play.fill")
+                                .foregroundColor(.blue)
                         }
                         .disabled(poems.isEmpty)
 
@@ -272,6 +273,7 @@ struct PlaylistDetailView: View {
                             }
                         } label: {
                             Image(systemName: "repeat")
+                                .foregroundColor(.orange)
                         }
                         .disabled(poems.isEmpty)
 
@@ -279,10 +281,11 @@ struct PlaylistDetailView: View {
                             .fill(Color.secondary.opacity(0.4))
                             .frame(width: 1, height: 18)
 
-                        Button(role: .destructive) {
+                        Button {
                             showingDeleteConfirm = true
                         } label: {
                             Image(systemName: "trash")
+                                .foregroundColor(.primary)
                         }
                     }
                 }
