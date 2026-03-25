@@ -6,7 +6,10 @@ struct ContentView: View {
     @State private var showingAddPoem = false
     @State private var showingEditPoem = false
     @State private var showingCiPaiList = false
+    @State private var showingNewPlaylist = false
+    @State private var newPlaylistName = ""
     @State private var searchText = ""
+    @State private var selectedPlaylist: Playlist?
 
     @State private var autoPlay = false
     @State private var navigatingViaAutoPlay = false
@@ -33,11 +36,13 @@ struct ContentView: View {
                 //}
                 ToolbarItem(placement: .automatic) {
                     Menu {
-                        Section("词牌") {
-                            Button {
-                                showingCiPaiList = true
-                            } label: {
-                                Label("词牌大全", systemImage: "text.book.closed")
+                        Section("播放列表") {
+                            ForEach(dbManager.playlists) { playlist in
+                                Button {
+                                    selectedPlaylist = playlist
+                                } label: {
+                                    Text(playlist.name)
+                                }
                             }
                         }
                         Section("词库") {
@@ -56,6 +61,13 @@ struct ContentView: View {
                                 }
                             }
                         }
+                        Section("词牌") {
+                            Button {
+                                showingCiPaiList = true
+                            } label: {
+                                Label("词牌", systemImage: "text.book.closed")
+                            }
+                        }
                     } label: {
                         Image(systemName: "line.3.horizontal")
                     }
@@ -64,7 +76,8 @@ struct ContentView: View {
             .navigationTitle(dbManager.currentLibrary.name)
         } detail: {
             if let poem = selectedPoem {
-                PoemDetailView(poem: poem, poems: dbManager.poems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, speaker: speaker, onEdit: {
+                let displayPoems = selectedPlaylist != nil ? dbManager.poemsInPlaylist(selectedPlaylist!.id) : dbManager.poems
+                PoemDetailView(poem: poem, poems: displayPoems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, speaker: speaker, onEdit: {
                     showingEditPoem = true
                 }, onNavigate: { newPoem, shouldAutoPlay in
                     navigatingViaAutoPlay = shouldAutoPlay
@@ -115,6 +128,28 @@ struct ContentView: View {
                         }
                     }
             }
+        }
+        .fullScreenCover(item: $selectedPlaylist) { playlist in
+            NavigationStack {
+                PlaylistDetailView(dbManager: dbManager, playlist: playlist, onDismiss: {
+                    selectedPlaylist = nil
+                })
+            }
+        }
+        .alert("新建播放列表", isPresented: $showingNewPlaylist) {
+            TextField("名称", text: $newPlaylistName)
+            Button("取消", role: .cancel) {
+                newPlaylistName = ""
+            }
+            Button("创建") {
+                let name = newPlaylistName.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !name.isEmpty {
+                    _ = dbManager.createPlaylist(name: name)
+                }
+                newPlaylistName = ""
+            }
+        } message: {
+            Text("请输入播放列表名称")
         }
     }
 }

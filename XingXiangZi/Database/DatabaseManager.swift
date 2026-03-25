@@ -11,6 +11,7 @@ final class DatabaseManager: ObservableObject {
     @Published var authorTopGroups: [AuthorTopGroup] = []
     @Published var alphabetAuthorSections: [AlphabetAuthorSection] = []
     @Published var cipaiList: [CiPai] = []
+    @Published var playlists: [Playlist] = []
     @Published var currentLibrary: Library = Library.defaultLibrary
 
     /// Current library's table name
@@ -23,8 +24,10 @@ final class DatabaseManager: ObservableObject {
         seedLibrariesIfNeeded()
         createCiPaiTable()
         seedCiPaiIfNeeded()
+        createPlaylistTables()
         loadPoems()
         loadCiPaiList()
+        loadPlaylists()
     }
 
     deinit {
@@ -529,5 +532,203 @@ final class DatabaseManager: ObservableObject {
         let charCount = sqlite3_column_type(stmt, 7) != SQLITE_NULL ? Int(sqlite3_column_int(stmt, 7)) : nil
         let example = sqlite3_column_text(stmt, 8).map { String(cString: $0) }
         return CiPai(id: id, name: name, nameTc: nameTc, aliases: aliases, intro: intro, pattern: pattern, sectionCount: sectionCount, charCount: charCount, example: example)
+    }
+
+    // MARK: - Playlists
+
+    private func createPlaylistTables() {
+        let playlistSQL = """
+            CREATE TABLE IF NOT EXISTS playlists (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT (datetime('now'))
+            );
+            """
+        let entrySQL = """
+            CREATE TABLE IF NOT EXISTS playlist_entries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                playlist_id INTEGER NOT NULL,
+                poem_id INTEGER NOT NULL,
+                library_id TEXT NOT NULL,
+                sort_order INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY (playlist_id) REFERENCES playlists(id) ON DELETE CASCADE
+            );
+            """
+        var errMsg: UnsafeMutablePointer<CChar>?
+        sqlite3_exec(db, playlistSQL, nil, nil, &errMsg)
+        if let errMsg { sqlite3_free(errMsg) }
+        sqlite3_exec(db, entrySQL, nil, nil, &errMsg)
+        if let errMsg { sqlite3_free(errMsg) }
+        // Enable foreign keys
+        sqlite3_exec(db, "PRAGMA foreign_keys = ON;", nil, nil, nil)
+    }
+
+    func loadPlaylists() {
+        let sql = "SELECT id, name, created_at FROM playlists ORDER BY name COLLATE NOCASE;"
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return }
+        defer { sqlite3_finalize(stmt) }
+
+        var results: [Playlist] = []
+        while sqlite3_step(stmt) == SQLITE_ROW {
+            let id = sqlite3_column_int64(stmt, 0)
+            let name = String(cString: sqlite3_column_text(stmt, 1))
+            let createdAt = String(cString: sqlite3_column_text(stmt, 2))
+            results.append(Playlist(id: id, name: name, createdAt: createdAt))
+        }
+        playlists = results
+    }
+
+    func createPlaylist(name: String) -> Playlist? {
+        let sql = "INSERT INTO playlists (name) VALUES (?);"
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return nil }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_text(stmt, 1, (name as NSString).utf8String, -1, nil)
+        guard sqlite3_step(stmt) == SQLITE_DONE else { return nil }
+
+        let id = sqlite3_last_insert_rowid(db)
+        loadPlaylists()
+        return playlists.first { $0.id == id }
+    }
+
+    func renamePlaylist(id: Int64, newName: String) {
+        let sql = "UPDATE playlists SET name = ? WHERE id = ?;"
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_text(stmt, 1, (newName as NSString).utf8String, -1, nil)
+        sqlite3_bind_int64(stmt, 2, id)
+        sqlite3_step(stmt)
+        loadPlaylists()
+    }
+
+    func deletePlaylist(id: Int64) {
+        // Delete entries first, then playlist
+        let delEntries = "DELETE FROM playlist_entries WHERE playlist_id = ?;"
+        var stmt: OpaquePointer?
+        if sqlite3_prepare_v2(db, delEntries, -1, &stmt, nil) == SQLITE_OK {
+            sqlite3_bind_int64(stmt, 1, id)
+            sqlite3_step(stmt)
+        }
+        sqlite3_finalize(stmt)
+
+        let delPlaylist = "DELETE FROM playlists WHERE id = ?;"
+        stmt = nil
+        if sqlite3_prepare_v2(db, delPlaylist, -1, &stmt, nil) == SQLITE_OK {
+            sqlite3_bind_int64(stmt, 1, id)
+            sqlite3_step(stmt)
+        }
+        sqlite3_finalize(stmt)
+        loadPlaylists()
+    }
+
+    func addPoemToPlaylist(playlistId: Int64, poemId: Int64, libraryId: String) {
+        // Check if already in playlist
+        let checkSQL = "SELECT COUNT(*) FROM playlist_entries WHERE playlist_id = ? AND poem_id = ? AND library_id = ?;"
+        var checkStmt: OpaquePointer?
+        if sqlite3_prepare_v2(db, checkSQL, -1, &checkStmt, nil) == SQLITE_OK {
+            sqlite3_bind_int64(checkStmt, 1, playlistId)
+            sqlite3_bind_int64(checkStmt, 2, poemId)
+            sqlite3_bind_text(checkStmt, 3, (libraryId as NSString).utf8String, -1, nil)
+            if sqlite3_step(checkStmt) == SQLITE_ROW && sqlite3_column_int(checkStmt, 0) > 0 {
+                sqlite3_finalize(checkStmt)
+                return // Already exists
+            }
+        }
+        sqlite3_finalize(checkStmt)
+
+        // Get max sort_order
+        let maxSQL = "SELECT COALESCE(MAX(sort_order), -1) FROM playlist_entries WHERE playlist_id = ?;"
+        var maxStmt: OpaquePointer?
+        var nextOrder = 0
+        if sqlite3_prepare_v2(db, maxSQL, -1, &maxStmt, nil) == SQLITE_OK {
+            sqlite3_bind_int64(maxStmt, 1, playlistId)
+            if sqlite3_step(maxStmt) == SQLITE_ROW {
+                nextOrder = Int(sqlite3_column_int(maxStmt, 0)) + 1
+            }
+        }
+        sqlite3_finalize(maxStmt)
+
+        let sql = "INSERT INTO playlist_entries (playlist_id, poem_id, library_id, sort_order) VALUES (?, ?, ?, ?);"
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_int64(stmt, 1, playlistId)
+        sqlite3_bind_int64(stmt, 2, poemId)
+        sqlite3_bind_text(stmt, 3, (libraryId as NSString).utf8String, -1, nil)
+        sqlite3_bind_int(stmt, 4, Int32(nextOrder))
+        sqlite3_step(stmt)
+    }
+
+    func removePoemFromPlaylist(playlistId: Int64, poemId: Int64, libraryId: String) {
+        let sql = "DELETE FROM playlist_entries WHERE playlist_id = ? AND poem_id = ? AND library_id = ?;"
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_int64(stmt, 1, playlistId)
+        sqlite3_bind_int64(stmt, 2, poemId)
+        sqlite3_bind_text(stmt, 3, (libraryId as NSString).utf8String, -1, nil)
+        sqlite3_step(stmt)
+    }
+
+    func poemsInPlaylist(_ playlistId: Int64) -> [Poem] {
+        let sql = """
+            SELECT pe.library_id, pe.poem_id FROM playlist_entries pe
+            WHERE pe.playlist_id = ?
+            ORDER BY pe.sort_order;
+            """
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return [] }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_int64(stmt, 1, playlistId)
+
+        var results: [Poem] = []
+        while sqlite3_step(stmt) == SQLITE_ROW {
+            let libId = String(cString: sqlite3_column_text(stmt, 0))
+            let poemId = sqlite3_column_int64(stmt, 1)
+            if let poem = fetchPoemById(poemId, fromTable: libId) {
+                results.append(poem)
+            }
+        }
+        return results
+    }
+
+    func playlistsContainingPoem(poemId: Int64, libraryId: String) -> [Int64] {
+        let sql = "SELECT playlist_id FROM playlist_entries WHERE poem_id = ? AND library_id = ?;"
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return [] }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_int64(stmt, 1, poemId)
+        sqlite3_bind_text(stmt, 2, (libraryId as NSString).utf8String, -1, nil)
+
+        var ids: [Int64] = []
+        while sqlite3_step(stmt) == SQLITE_ROW {
+            ids.append(sqlite3_column_int64(stmt, 0))
+        }
+        return ids
+    }
+
+    private func fetchPoemById(_ poemId: Int64, fromTable table: String) -> Poem? {
+        // Validate table name to prevent injection
+        let allowedTables = Set(Library.allLibraries.map { $0.id })
+        guard allowedTables.contains(table) else { return nil }
+
+        let sql = "SELECT id, title, author, dynasty, content FROM \(table) WHERE id = ?;"
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return nil }
+        defer { sqlite3_finalize(stmt) }
+
+        sqlite3_bind_int64(stmt, 1, poemId)
+        if sqlite3_step(stmt) == SQLITE_ROW {
+            return readPoem(from: stmt)
+        }
+        return nil
     }
 }

@@ -26,6 +26,9 @@
 		C1A00001LIB0000000000001 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000001 /* Library.swift */; };
 		C1A00001LIB0000000000002 /* LibrarySwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */; };
 		C1A00001LIB0000000000003 /* seed2.sql in Resources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000003 /* seed2.sql */; };
+		C1A00001PLST000000000001 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002PLST000000000001 /* Playlist.swift */; };
+		C1A00001PLST000000000002 /* AddToPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002PLST000000000002 /* AddToPlaylistView.swift */; };
+		C1A00001PLST000000000003 /* PlaylistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002PLST000000000003 /* PlaylistViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +52,9 @@
 		C1A00002LIB0000000000001 /* Library.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
 		C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySwitcherView.swift; sourceTree = "<group>"; };
 		C1A00002LIB0000000000003 /* seed2.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed2.sql; sourceTree = "<group>"; };
+		C1A00002PLST000000000001 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		C1A00002PLST000000000002 /* AddToPlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToPlaylistView.swift; sourceTree = "<group>"; };
+		C1A00002PLST000000000003 /* PlaylistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -65,6 +71,7 @@
 			children = (
 				C1A00002CIPAI000000000001 /* CiPai.swift */,
 				C1A00002LIB0000000000001 /* Library.swift */,
+				C1A00002PLST000000000001 /* Playlist.swift */,
 				A4D1C23B71B0E6693FEBD428 /* Poem.swift */,
 			);
 			path = Models;
@@ -74,11 +81,13 @@
 			isa = PBXGroup;
 			children = (
 				A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */,
+				C1A00002PLST000000000002 /* AddToPlaylistView.swift */,
 				C1A00002CIPAI000000000002 /* CiPaiDetailView.swift */,
 				C1A00002CIPAI000000000003 /* CiPaiListView.swift */,
 				7899E60373E33109554A4ADC /* ContentView.swift */,
 				B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */,
 				C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */,
+				C1A00002PLST000000000003 /* PlaylistViews.swift */,
 				954B69E197849041F3CC6EA9 /* PoemDetailView.swift */,
 				62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */,
 			);
@@ -201,6 +210,9 @@
 				C1A00001CIPAI000000000003 /* CiPaiListView.swift in Sources */,
 				C1A00001LIB0000000000001 /* Library.swift in Sources */,
 				C1A00001LIB0000000000002 /* LibrarySwitcherView.swift in Sources */,
+				C1A00001PLST000000000001 /* Playlist.swift in Sources */,
+				C1A00001PLST000000000002 /* AddToPlaylistView.swift in Sources */,
+				C1A00001PLST000000000003 /* PlaylistViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

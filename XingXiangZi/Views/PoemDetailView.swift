@@ -11,7 +11,9 @@ struct PoemDetailView: View {
     @ObservedObject var speaker: PoemSpeaker
     var onEdit: (() -> Void)?
     var onNavigate: ((Poem, Bool) -> Void)?
+    var showNavigationButtons: Bool = true
     @State private var showingCiPaiDetail = false
+    @State private var showingAddToPlaylist = false
 
     /// Extract cipai name from poem title (part before · or full title)
     private var matchedCiPai: CiPai? {
@@ -77,6 +79,14 @@ struct PoemDetailView: View {
                     //}
                     //.buttonStyle(.plain)
 
+                    Button {
+                        showingAddToPlaylist = true
+                    } label: {
+                        Image(systemName: "text.badge.plus")
+                            .font(.title2)
+                    }
+                    .buttonStyle(.plain)
+
                     Picker("", selection: $selectedLanguage) {
                         ForEach(SpeechLanguage.allCases) { lang in
                             Text(lang.label).tag(lang)
@@ -130,26 +140,28 @@ struct PoemDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .toolbar {
-            ToolbarItemGroup(placement: .automatic) {
-                Button {
-                    if let prev = previousPoem {
-                        speaker.stop()
-                        onNavigate?(prev, false)
+            if showNavigationButtons {
+                ToolbarItemGroup(placement: .automatic) {
+                    Button {
+                        if let prev = previousPoem {
+                            speaker.stop()
+                            onNavigate?(prev, false)
+                        }
+                    } label: {
+                        Image(systemName: "backward.end.fill")
                     }
-                } label: {
-                    Image(systemName: "chevron.left")
-                }
-                .disabled(previousPoem == nil)
+                    .disabled(previousPoem == nil)
 
-                Button {
-                    if let next = nextPoem {
-                        speaker.stop()
-                        onNavigate?(next, false)
+                    Button {
+                        if let next = nextPoem {
+                            speaker.stop()
+                            onNavigate?(next, false)
+                        }
+                    } label: {
+                        Image(systemName: "forward.end.fill")
                     }
-                } label: {
-                    Image(systemName: "chevron.right")
+                    .disabled(nextPoem == nil)
                 }
-                .disabled(nextPoem == nil)
             }
         }
         .onAppear {
@@ -158,6 +170,13 @@ struct PoemDetailView: View {
             } else {
                 speaker.stop()
             }
+        }
+        .sheet(isPresented: $showingAddToPlaylist) {
+            AddToPlaylistView(
+                dbManager: DatabaseManager.shared,
+                poem: poem,
+                libraryId: DatabaseManager.shared.currentLibrary.id
+            )
         }
         .sheet(isPresented: $showingCiPaiDetail) {
             if let cipai = matchedCiPai {
@@ -195,6 +214,14 @@ struct PoemDetailView: View {
                         self.onNavigate?(next, true)
                     }
                 }
+            case .loopAll:
+                let next = self.nextPoem ?? self.poems.first
+                if let next = next {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        guard self.poem.id == poemId else { return }
+                        self.onNavigate?(next, true)
+                    }
+                }
             }
         }
     }
@@ -221,6 +248,14 @@ struct PoemDetailView: View {
                         self.onNavigate?(next, true)
                     }
                 }
+            case .loopAll:
+                let next = self.nextPoem ?? self.poems.first
+                if let next = next {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        guard self.poem.id == poemId else { return }
+                        self.onNavigate?(next, true)
+                    }
+                }
             }
         }
     }
@@ -230,6 +265,7 @@ enum PlaybackMode: String, CaseIterable, Identifiable {
     case single
     case repeatOne
     case next
+    case loopAll
 
     var id: String { rawValue }
 
@@ -238,6 +274,7 @@ enum PlaybackMode: String, CaseIterable, Identifiable {
         case .single: return "播完停止"
         case .repeatOne: return "單首循環"
         case .next: return "播完下一首"
+        case .loopAll: return "列表循環"
         }
     }
 
@@ -246,6 +283,7 @@ enum PlaybackMode: String, CaseIterable, Identifiable {
         case .single: return "play.fill"
         case .repeatOne: return "repeat.1"
         case .next: return "forward.fill"
+        case .loopAll: return "repeat"
         }
     }
 }
