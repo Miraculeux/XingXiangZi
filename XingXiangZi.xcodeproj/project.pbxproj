@@ -11,8 +11,7 @@
 		4E6D2FBDFFA11A0F54512A14 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */; };
 		762B38DDE9EFB2B665D89B4E /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */; };
 		91163F5B947D8F7ADDAD3923 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7899E60373E33109554A4ADC /* ContentView.swift */; };
-		A8A92B6F9D675AF4434EDCEB /* silence.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1DE98E4A7AD590BAAB4756DA /* silence.wav */; };
-		BEB429D8985B279387E349EF /* silence.caf in Resources */ = {isa = PBXBuildFile; fileRef = 3F1D37273B1B018A16DFB3B1 /* silence.caf */; };
+
 		CA45BE1EEB81225024E02F85 /* XingXiangZiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */; };
 		DA0C09D6E612807BCC00BAC3 /* PoemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954B69E197849041F3CC6EA9 /* PoemDetailView.swift */; };
 		DDFFDE866AE07AEA188AEC72 /* EditPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */; };
@@ -33,8 +32,7 @@
 
 /* Begin PBXFileReference section */
 		02F83C407A9879DA1A3446B6 /* seed.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; path = seed.sqlite3; sourceTree = "<group>"; };
-		1DE98E4A7AD590BAAB4756DA /* silence.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = silence.wav; sourceTree = "<group>"; };
-		3F1D37273B1B018A16DFB3B1 /* silence.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = silence.caf; sourceTree = "<group>"; };
+
 		467FC9F34ED908A8BDA54532 /* XingXiangZi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XingXiangZiApp.swift; sourceTree = "<group>"; };
@@ -117,8 +115,7 @@
 				02F83C407A9879DA1A3446B6 /* seed.sqlite3 */,
 				C1A00002CIPAI000000000004 /* seed_cipai.sql */,
 				C1A00002LIB0000000000003 /* seed2.sql */,
-				3F1D37273B1B018A16DFB3B1 /* silence.caf */,
-				1DE98E4A7AD590BAAB4756DA /* silence.wav */,
+
 				6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */,
 				CE32A0C5547839251A1F711A /* Database */,
 				8D8D128EE8F64BEB3D08CD76 /* Models */,
@@ -185,8 +182,7 @@
 				FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */,
 				C1A00001CIPAI000000000004 /* seed_cipai.sql in Resources */,
 				C1A00001LIB0000000000003 /* seed2.sql in Resources */,
-				BEB429D8985B279387E349EF /* silence.caf in Resources */,
-				A8A92B6F9D675AF4434EDCEB /* silence.wav in Resources */,
+
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
