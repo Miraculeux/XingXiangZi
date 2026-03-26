@@ -427,8 +427,6 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
     override init() {
         super.init()
         synthesizer.delegate = self
-        setupAudioSession()
-        startEngine()
         configureRemoteCommands()
 
         NotificationCenter.default.addObserver(
