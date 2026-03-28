@@ -1,4 +1,5 @@
 import AVFoundation
+import AVKit
 import MediaPlayer
 import SwiftUI
 
@@ -118,6 +119,9 @@ struct PoemDetailView: View {
                             .foregroundColor(.blue)
                     }
                     .buttonStyle(.plain)
+
+                    AirPlayRoutePickerView()
+                        .frame(width: 28, height: 28)
                 }
 
                 Divider()
@@ -398,6 +402,8 @@ private struct HighlightedPoemText: View {
 
 @MainActor
 final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSynthesizerDelegate {
+    static let shared = PoemSpeaker()
+
     private let synthesizer = AVSpeechSynthesizer()
     private let audioEngine = AVAudioEngine()
     private let playerNode = AVAudioPlayerNode()
@@ -521,22 +527,22 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         cc.playCommand.isEnabled = true
         cc.playCommand.addTarget { [weak self] _ in
             guard let self, self.isPaused else { return .commandFailed }
-            self.resumePlayback()
+            self.resume()
             return .success
         }
 
         cc.pauseCommand.isEnabled = true
         cc.pauseCommand.addTarget { [weak self] _ in
             guard let self, !self.isPaused else { return .commandFailed }
-            self.pausePlayback()
+            self.pause()
             return .success
         }
 
         cc.togglePlayPauseCommand.isEnabled = true
         cc.togglePlayPauseCommand.addTarget { [weak self] _ in
             guard let self else { return .commandFailed }
-            if self.isPaused { self.resumePlayback() }
-            else { self.pausePlayback() }
+            if self.isPaused { self.resume() }
+            else { self.pause() }
             return .success
         }
 
@@ -626,7 +632,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 
-    private func pausePlayback() {
+    func pause() {
         guard !isPaused else { return }
         pauseElapsed = currentElapsed
         playerNode.pause()
@@ -636,7 +642,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         updateNowPlaying(rate: 0.0)
     }
 
-    private func resumePlayback() {
+    func resume() {
         guard isPaused else { return }
         playerNode.play()
         playbackStartTime = Date().addingTimeInterval(-pauseElapsed)

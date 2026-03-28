@@ -23,6 +23,8 @@ targets:
           UIApplicationSupportsMultipleScenes: false
           UISceneConfigurations: {}
         UIApplicationSupportsIndirectInputEvents: true
+        NSUserActivityTypes:
+          - INPlayMediaIntent
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft
@@ -32,6 +34,8 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
+    entitlements:
+      path: XingXiangZi/XingXiangZi.entitlements
     settings:
       base:
         MARKETING_VERSION: "1.0"

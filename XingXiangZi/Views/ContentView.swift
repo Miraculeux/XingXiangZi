@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var showingEditPoem = false
     @State private var showingCiPaiList = false
     @State private var showingNewPlaylist = false
+    @State private var showingSettings = false
     @State private var newPlaylistName = ""
     @State private var searchText = ""
     @State private var selectedPlaylist: Playlist?
@@ -16,7 +17,7 @@ struct ContentView: View {
     @State private var playbackMode: PlaybackMode = .single
     @State private var selectedLanguage: SpeechLanguage = .cantonese
     @State private var sidebarGrouping: SidebarGrouping = .dynasty
-    @StateObject private var speaker = PoemSpeaker()
+    @ObservedObject private var speaker = PoemSpeaker.shared
 
     var body: some View {
         NavigationSplitView {
@@ -66,6 +67,13 @@ struct ContentView: View {
                                 showingCiPaiList = true
                             } label: {
                                 Label("词牌", systemImage: "text.book.closed")
+                            }
+                        }
+                        Section {
+                            Button {
+                                showingSettings = true
+                            } label: {
+                                Label("设置", systemImage: "gearshape")
                             }
                         }
                     } label: {
@@ -128,6 +136,9 @@ struct ContentView: View {
                         }
                     }
             }
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
         }
         .fullScreenCover(item: $selectedPlaylist) { playlist in
             NavigationStack {

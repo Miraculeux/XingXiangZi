@@ -8,51 +8,58 @@
 
 /* Begin PBXBuildFile section */
 		0A4C4754C82B4A38700F20CF /* AddPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */; };
+		225A6A5EA74E1D427E131D15 /* seed2.sql in Resources */ = {isa = PBXBuildFile; fileRef = 9670352D8E01CCD97810CD22 /* seed2.sql */; };
+		268400AA5869DBFE9F9111A0 /* CiPai.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A97323995415655B9D2B00 /* CiPai.swift */; };
+		30DDBFA509F04C84F38CC9DD /* AddToPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477758384C17BDD8EB69B129 /* AddToPlaylistView.swift */; };
+		3A15816AC0C1DE9C673CAF59 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62089ED790121759BF7A511B /* Playlist.swift */; };
+		3AB8384AEC3C11C2D1237C76 /* CiPaiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5D588F0113177401F800A3 /* CiPaiDetailView.swift */; };
+		43DC5F33CBCB91923EE91EE5 /* PlaylistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E5DA1A349C42AA6E89BB4E /* PlaylistViews.swift */; };
+		4707A446E3B5B278F1AA7320 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275DD5C7DA0D48395CCA3E50 /* SettingsView.swift */; };
 		4E6D2FBDFFA11A0F54512A14 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */; };
 		762B38DDE9EFB2B665D89B4E /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */; };
+		822D0506641B69D841B5F63E /* AirPlayRoutePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A82566C767850415D545D3 /* AirPlayRoutePickerView.swift */; };
+		8C5A4D0E77CA2D073646F538 /* MediaIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1F4ACE34158E7DD6BC4C68 /* MediaIntentHandler.swift */; };
 		91163F5B947D8F7ADDAD3923 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7899E60373E33109554A4ADC /* ContentView.swift */; };
-
+		96F80D71261583E08019E472 /* CiPaiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC42A46DBB4D9686964B2A9 /* CiPaiListView.swift */; };
+		C0CE62449B7830B139FBC7A3 /* seed_cipai.sql in Resources */ = {isa = PBXBuildFile; fileRef = 06905E53B30895370ED77C14 /* seed_cipai.sql */; };
 		CA45BE1EEB81225024E02F85 /* XingXiangZiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */; };
+		CEDF2B6385D111E2BC035E52 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94EC6042CDE9AC4AF11623B /* Library.swift */; };
 		DA0C09D6E612807BCC00BAC3 /* PoemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954B69E197849041F3CC6EA9 /* PoemDetailView.swift */; };
 		DDFFDE866AE07AEA188AEC72 /* EditPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */; };
+		E48E99376149315A3FA36831 /* LibrarySwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602EEC655E9E3A7A05BCFDAC /* LibrarySwitcherView.swift */; };
 		ED303F1AEDB4ECD11754EE85 /* Poem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D1C23B71B0E6693FEBD428 /* Poem.swift */; };
+		F7D8AC738D6D66F1D10F94F5 /* SiriIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED986817AC54EA4E763399A4 /* SiriIntents.swift */; };
 		FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD69A29BDCD7A18058790C5B /* Assets.xcassets */; };
 		FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 02F83C407A9879DA1A3446B6 /* seed.sqlite3 */; };
-		C1A00001CIPAI000000000001 /* CiPai.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002CIPAI000000000001 /* CiPai.swift */; };
-		C1A00001CIPAI000000000002 /* CiPaiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002CIPAI000000000002 /* CiPaiDetailView.swift */; };
-		C1A00001CIPAI000000000003 /* CiPaiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002CIPAI000000000003 /* CiPaiListView.swift */; };
-		C1A00001CIPAI000000000004 /* seed_cipai.sql in Resources */ = {isa = PBXBuildFile; fileRef = C1A00002CIPAI000000000004 /* seed_cipai.sql */; };
-		C1A00001LIB0000000000001 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000001 /* Library.swift */; };
-		C1A00001LIB0000000000002 /* LibrarySwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */; };
-		C1A00001LIB0000000000003 /* seed2.sql in Resources */ = {isa = PBXBuildFile; fileRef = C1A00002LIB0000000000003 /* seed2.sql */; };
-		C1A00001PLST000000000001 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002PLST000000000001 /* Playlist.swift */; };
-		C1A00001PLST000000000002 /* AddToPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002PLST000000000002 /* AddToPlaylistView.swift */; };
-		C1A00001PLST000000000003 /* PlaylistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00002PLST000000000003 /* PlaylistViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		02F83C407A9879DA1A3446B6 /* seed.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; path = seed.sqlite3; sourceTree = "<group>"; };
-
+		06905E53B30895370ED77C14 /* seed_cipai.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed_cipai.sql; sourceTree = "<group>"; };
+		22A82566C767850415D545D3 /* AirPlayRoutePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayRoutePickerView.swift; sourceTree = "<group>"; };
+		275DD5C7DA0D48395CCA3E50 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		28E5DA1A349C42AA6E89BB4E /* PlaylistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViews.swift; sourceTree = "<group>"; };
+		2B3AF342A70C5DF0EED67372 /* XingXiangZi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = XingXiangZi.entitlements; sourceTree = "<group>"; };
 		467FC9F34ED908A8BDA54532 /* XingXiangZi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		477758384C17BDD8EB69B129 /* AddToPlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToPlaylistView.swift; sourceTree = "<group>"; };
+		4CC42A46DBB4D9686964B2A9 /* CiPaiListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPaiListView.swift; sourceTree = "<group>"; };
+		602EEC655E9E3A7A05BCFDAC /* LibrarySwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySwitcherView.swift; sourceTree = "<group>"; };
+		62089ED790121759BF7A511B /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		67A97323995415655B9D2B00 /* CiPai.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPai.swift; sourceTree = "<group>"; };
 		6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XingXiangZiApp.swift; sourceTree = "<group>"; };
 		7899E60373E33109554A4ADC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		954B69E197849041F3CC6EA9 /* PoemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoemDetailView.swift; sourceTree = "<group>"; };
+		9670352D8E01CCD97810CD22 /* seed2.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed2.sql; sourceTree = "<group>"; };
 		A4D1C23B71B0E6693FEBD428 /* Poem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poem.swift; sourceTree = "<group>"; };
 		A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPoemView.swift; sourceTree = "<group>"; };
+		A94EC6042CDE9AC4AF11623B /* Library.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
 		AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPoemView.swift; sourceTree = "<group>"; };
+		CB5D588F0113177401F800A3 /* CiPaiDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPaiDetailView.swift; sourceTree = "<group>"; };
 		CD69A29BDCD7A18058790C5B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C1A00002CIPAI000000000001 /* CiPai.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPai.swift; sourceTree = "<group>"; };
-		C1A00002CIPAI000000000002 /* CiPaiDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPaiDetailView.swift; sourceTree = "<group>"; };
-		C1A00002CIPAI000000000003 /* CiPaiListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPaiListView.swift; sourceTree = "<group>"; };
-		C1A00002CIPAI000000000004 /* seed_cipai.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed_cipai.sql; sourceTree = "<group>"; };
-		C1A00002LIB0000000000001 /* Library.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
-		C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySwitcherView.swift; sourceTree = "<group>"; };
-		C1A00002LIB0000000000003 /* seed2.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed2.sql; sourceTree = "<group>"; };
-		C1A00002PLST000000000001 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
-		C1A00002PLST000000000002 /* AddToPlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToPlaylistView.swift; sourceTree = "<group>"; };
-		C1A00002PLST000000000003 /* PlaylistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViews.swift; sourceTree = "<group>"; };
+		ED986817AC54EA4E763399A4 /* SiriIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriIntents.swift; sourceTree = "<group>"; };
+		FD1F4ACE34158E7DD6BC4C68 /* MediaIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaIntentHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -67,9 +74,9 @@
 		8D8D128EE8F64BEB3D08CD76 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C1A00002CIPAI000000000001 /* CiPai.swift */,
-				C1A00002LIB0000000000001 /* Library.swift */,
-				C1A00002PLST000000000001 /* Playlist.swift */,
+				67A97323995415655B9D2B00 /* CiPai.swift */,
+				A94EC6042CDE9AC4AF11623B /* Library.swift */,
+				62089ED790121759BF7A511B /* Playlist.swift */,
 				A4D1C23B71B0E6693FEBD428 /* Poem.swift */,
 			);
 			path = Models;
@@ -79,14 +86,16 @@
 			isa = PBXGroup;
 			children = (
 				A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */,
-				C1A00002PLST000000000002 /* AddToPlaylistView.swift */,
-				C1A00002CIPAI000000000002 /* CiPaiDetailView.swift */,
-				C1A00002CIPAI000000000003 /* CiPaiListView.swift */,
+				477758384C17BDD8EB69B129 /* AddToPlaylistView.swift */,
+				22A82566C767850415D545D3 /* AirPlayRoutePickerView.swift */,
+				CB5D588F0113177401F800A3 /* CiPaiDetailView.swift */,
+				4CC42A46DBB4D9686964B2A9 /* CiPaiListView.swift */,
 				7899E60373E33109554A4ADC /* ContentView.swift */,
 				B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */,
-				C1A00002LIB0000000000002 /* LibrarySwitcherView.swift */,
-				C1A00002PLST000000000003 /* PlaylistViews.swift */,
+				602EEC655E9E3A7A05BCFDAC /* LibrarySwitcherView.swift */,
+				28E5DA1A349C42AA6E89BB4E /* PlaylistViews.swift */,
 				954B69E197849041F3CC6EA9 /* PoemDetailView.swift */,
+				275DD5C7DA0D48395CCA3E50 /* SettingsView.swift */,
 				62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */,
 			);
 			path = Views;
@@ -112,10 +121,12 @@
 			isa = PBXGroup;
 			children = (
 				CD69A29BDCD7A18058790C5B /* Assets.xcassets */,
+				FD1F4ACE34158E7DD6BC4C68 /* MediaIntentHandler.swift */,
+				06905E53B30895370ED77C14 /* seed_cipai.sql */,
 				02F83C407A9879DA1A3446B6 /* seed.sqlite3 */,
-				C1A00002CIPAI000000000004 /* seed_cipai.sql */,
-				C1A00002LIB0000000000003 /* seed2.sql */,
-
+				9670352D8E01CCD97810CD22 /* seed2.sql */,
+				ED986817AC54EA4E763399A4 /* SiriIntents.swift */,
+				2B3AF342A70C5DF0EED67372 /* XingXiangZi.entitlements */,
 				6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */,
 				CE32A0C5547839251A1F711A /* Database */,
 				8D8D128EE8F64BEB3D08CD76 /* Models */,
@@ -180,9 +191,8 @@
 			files = (
 				FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */,
 				FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */,
-				C1A00001CIPAI000000000004 /* seed_cipai.sql in Resources */,
-				C1A00001LIB0000000000003 /* seed2.sql in Resources */,
-
+				225A6A5EA74E1D427E131D15 /* seed2.sql in Resources */,
+				C0CE62449B7830B139FBC7A3 /* seed_cipai.sql in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,21 +204,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A4C4754C82B4A38700F20CF /* AddPoemView.swift in Sources */,
+				30DDBFA509F04C84F38CC9DD /* AddToPlaylistView.swift in Sources */,
+				822D0506641B69D841B5F63E /* AirPlayRoutePickerView.swift in Sources */,
+				268400AA5869DBFE9F9111A0 /* CiPai.swift in Sources */,
+				3AB8384AEC3C11C2D1237C76 /* CiPaiDetailView.swift in Sources */,
+				96F80D71261583E08019E472 /* CiPaiListView.swift in Sources */,
 				91163F5B947D8F7ADDAD3923 /* ContentView.swift in Sources */,
 				762B38DDE9EFB2B665D89B4E /* DatabaseManager.swift in Sources */,
 				DDFFDE866AE07AEA188AEC72 /* EditPoemView.swift in Sources */,
+				CEDF2B6385D111E2BC035E52 /* Library.swift in Sources */,
+				E48E99376149315A3FA36831 /* LibrarySwitcherView.swift in Sources */,
+				8C5A4D0E77CA2D073646F538 /* MediaIntentHandler.swift in Sources */,
+				3A15816AC0C1DE9C673CAF59 /* Playlist.swift in Sources */,
+				43DC5F33CBCB91923EE91EE5 /* PlaylistViews.swift in Sources */,
 				ED303F1AEDB4ECD11754EE85 /* Poem.swift in Sources */,
 				DA0C09D6E612807BCC00BAC3 /* PoemDetailView.swift in Sources */,
+				4707A446E3B5B278F1AA7320 /* SettingsView.swift in Sources */,
 				4E6D2FBDFFA11A0F54512A14 /* SidebarView.swift in Sources */,
+				F7D8AC738D6D66F1D10F94F5 /* SiriIntents.swift in Sources */,
 				CA45BE1EEB81225024E02F85 /* XingXiangZiApp.swift in Sources */,
-				C1A00001CIPAI000000000001 /* CiPai.swift in Sources */,
-				C1A00001CIPAI000000000002 /* CiPaiDetailView.swift in Sources */,
-				C1A00001CIPAI000000000003 /* CiPaiListView.swift in Sources */,
-				C1A00001LIB0000000000001 /* Library.swift in Sources */,
-				C1A00001LIB0000000000002 /* LibrarySwitcherView.swift in Sources */,
-				C1A00001PLST000000000001 /* Playlist.swift in Sources */,
-				C1A00001PLST000000000002 /* AddToPlaylistView.swift in Sources */,
-				C1A00001PLST000000000003 /* PlaylistViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +352,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = XingXiangZi/XingXiangZi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7PAQPQ4423;
@@ -360,6 +375,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = XingXiangZi/XingXiangZi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7PAQPQ4423;
