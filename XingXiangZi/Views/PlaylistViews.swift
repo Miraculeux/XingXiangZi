@@ -169,6 +169,7 @@ struct PlaylistDetailView: View {
     @StateObject private var speaker = PoemSpeaker()
 
     var body: some View {
+        Group {
         if let poem = selectedPoem {
             PoemDetailView(poem: poem, poems: poems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, speaker: speaker, onEdit: nil, onNavigate: { newPoem, shouldAutoPlay in
                 navigatingViaAutoPlay = shouldAutoPlay
@@ -246,6 +247,7 @@ struct PlaylistDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
+                        speaker.stop()
                         onDismiss?()
                     } label: {
                         Image(systemName: "chevron.left")
@@ -293,6 +295,7 @@ struct PlaylistDetailView: View {
             .alert("确认删除", isPresented: $showingDeleteConfirm) {
                 Button("取消", role: .cancel) {}
                 Button("删除", role: .destructive) {
+                    speaker.stop()
                     dbManager.deletePlaylist(id: playlist.id)
                     onDismiss?()
                 }
@@ -303,8 +306,13 @@ struct PlaylistDetailView: View {
                 poems = dbManager.poemsInPlaylist(playlist.id)
             }
             .edgeSwipeBack {
+                speaker.stop()
                 onDismiss?()
             }
+        }
+        }
+        .onDisappear {
+            speaker.stop()
         }
     }
 

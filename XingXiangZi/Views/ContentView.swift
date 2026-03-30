@@ -84,7 +84,17 @@ struct ContentView: View {
             .navigationTitle(dbManager.currentLibrary.name)
         } detail: {
             if let poem = selectedPoem {
-                let displayPoems = selectedPlaylist != nil ? dbManager.poemsInPlaylist(selectedPlaylist!.id) : dbManager.poems
+                let displayPoems: [Poem] = {
+                    if selectedPlaylist != nil {
+                        return dbManager.poemsInPlaylist(selectedPlaylist!.id)
+                    }
+                    switch sidebarGrouping {
+                    case .dynasty:
+                        return dbManager.dynastyGroups.flatMap { $0.authors.flatMap { $0.poems } }
+                    case .author:
+                        return dbManager.alphabetAuthorSections.flatMap { $0.authors.flatMap { $0.poems } }
+                    }
+                }()
                 PoemDetailView(poem: poem, poems: displayPoems, autoPlay: autoPlay, playbackMode: $playbackMode, selectedLanguage: $selectedLanguage, speaker: speaker, onEdit: {
                     showingEditPoem = true
                 }, onNavigate: { newPoem, shouldAutoPlay in

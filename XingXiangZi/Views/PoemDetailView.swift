@@ -210,13 +210,13 @@ struct PoemDetailView: View {
             case .single:
                 break
             case .repeatOne:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     guard self.poem.id == poemId else { return }
                     self.startSpeaking()
                 }
             case .next:
                 if let next = self.nextPoem {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         guard self.poem.id == poemId else { return }
                         self.onNavigate?(next, true)
                     }
@@ -224,7 +224,7 @@ struct PoemDetailView: View {
             case .loopAll:
                 let next = self.nextPoem ?? self.poems.first
                 if let next = next {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         guard self.poem.id == poemId else { return }
                         self.onNavigate?(next, true)
                     }
@@ -244,13 +244,13 @@ struct PoemDetailView: View {
             case .single:
                 break
             case .repeatOne:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     guard self.poem.id == poemId else { return }
                     self.startSpeaking()
                 }
             case .next:
                 if let next = self.nextPoem {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         guard self.poem.id == poemId else { return }
                         self.onNavigate?(next, true)
                     }
@@ -258,7 +258,7 @@ struct PoemDetailView: View {
             case .loopAll:
                 let next = self.nextPoem ?? self.poems.first
                 if let next = next {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         guard self.poem.id == poemId else { return }
                         self.onNavigate?(next, true)
                     }
@@ -404,10 +404,15 @@ private struct HighlightedPoemText: View {
 final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSynthesizerDelegate {
     static let shared = PoemSpeaker()
 
-    private let synthesizer = AVSpeechSynthesizer()
-    private let audioEngine = AVAudioEngine()
-    private let playerNode = AVAudioPlayerNode()
+    private lazy var synthesizer: AVSpeechSynthesizer = {
+        let s = AVSpeechSynthesizer()
+        s.delegate = self
+        return s
+    }()
+    private lazy var audioEngine = AVAudioEngine()
+    private lazy var playerNode = AVAudioPlayerNode()
     private var highlightTimer: Timer?
+    private var audioInitialized = false
 
     @Published var isSpeaking = false
     @Published var spokenRange: Range<String.Index>?
@@ -429,11 +434,17 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
     private var playbackStartTime: Date?
     private var pauseElapsed: TimeInterval = 0
     private var totalDuration: TimeInterval = 0
+    private var remoteCommandsConfigured = false
 
     override init() {
         super.init()
-        synthesizer.delegate = self
-        configureRemoteCommands()
+    }
+
+    private func initializeAudioIfNeeded() {
+        guard !audioInitialized else { return }
+        audioInitialized = true
+        // Force lazy synthesizer initialization (sets delegate)
+        _ = synthesizer
 
         NotificationCenter.default.addObserver(
             self,
@@ -441,13 +452,6 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
             name: AVAudioSession.interruptionNotification,
             object: AVAudioSession.sharedInstance()
         )
-
-        // Verify background audio is properly configured
-        if let modes = Bundle.main.infoDictionary?["UIBackgroundModes"] as? [String] {
-            print("[TTS] UIBackgroundModes: \(modes)")
-        } else {
-            print("[TTS] WARNING: UIBackgroundModes NOT found in Info.plist!")
-        }
     }
 
     deinit {
@@ -589,7 +593,12 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         self.poemAuthor = author
         self.isPaused = false
 
+        initializeAudioIfNeeded()
         setupAudioSession()
+        if !remoteCommandsConfigured {
+            configureRemoteCommands()
+            remoteCommandsConfigured = true
+        }
         if !audioEngine.isRunning {
             startEngine()
         }
