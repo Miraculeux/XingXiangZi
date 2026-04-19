@@ -1,5 +1,11 @@
 import SwiftUI
 
+#if os(iOS)
+private let searchBarBackground = Color(.systemGray6)
+#else
+private let searchBarBackground = Color(nsColor: .controlBackgroundColor)
+#endif
+
 struct AlphabetCiPaiSection: Identifiable {
     let id = UUID()
     let letter: String
@@ -41,7 +47,7 @@ struct CiPaiListView: View {
                 }
             }
             .padding(8)
-            .background(Color(.systemGray6))
+            .background(searchBarBackground)
             .cornerRadius(8)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)

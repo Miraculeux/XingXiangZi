@@ -1,5 +1,11 @@
 import SwiftUI
 
+#if os(iOS)
+private let searchBarBackground = Color(.systemGray6)
+#else
+private let searchBarBackground = Color(nsColor: .controlBackgroundColor)
+#endif
+
 enum SidebarGrouping: String, CaseIterable, Identifiable {
     case dynasty
     case author
@@ -19,6 +25,9 @@ struct SidebarView: View {
     @Binding var selectedPoem: Poem?
     @Binding var searchText: String
     @Binding var grouping: SidebarGrouping
+
+    @State private var expandedDynasties: Set<String> = []
+    @State private var expandedAuthors: Set<String> = []
 
     private var displayDynastyGroups: [DynastyGroup] {
         if searchText.isEmpty {
@@ -54,12 +63,13 @@ struct SidebarView: View {
                 }
             }
             .padding(8)
-            .background(Color(.systemGray6))
+            .background(searchBarBackground)
             .cornerRadius(8)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
 
             // Grouping picker
+            #if os(macOS)
             Picker("分组", selection: $grouping) {
                 ForEach(SidebarGrouping.allCases) { g in
                     Text(g.label).tag(g)
@@ -68,6 +78,18 @@ struct SidebarView: View {
             .pickerStyle(.segmented)
             .padding(.horizontal, 12)
             .padding(.bottom, 8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .fixedSize()
+            #else
+            Picker("分组", selection: $grouping) {
+                ForEach(SidebarGrouping.allCases) { g in
+                    Text(g.label).tag(g)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 12)
+            .padding(.bottom, 8)
+            #endif
 
             // Tree view
             switch grouping {
@@ -90,14 +112,41 @@ struct SidebarView: View {
             List(selection: $selectedPoem) {
                 ForEach(displayDynastyGroups) { dynastyGroup in
                     Section {
-                        DisclosureGroup(dynastyGroup.dynasty) {
+                        DisclosureGroup(isExpanded: dynastyBinding(dynastyGroup.dynasty)) {
                             ForEach(dynastyGroup.authors) { authorGroup in
-                                DisclosureGroup(authorGroup.author) {
+                                DisclosureGroup(isExpanded: authorBinding(dynastyGroup.dynasty, authorGroup.author)) {
                                     ForEach(authorGroup.poems) { poem in
                                         poemRow(poem)
                                     }
+                                } label: {
+                                    Text(authorGroup.author)
+                                        #if os(macOS)
+                                        .font(.system(size: 15))
+                                        .contentShape(Rectangle())
+                                        .onTapGesture(count: 2) {
+                                            let key = "\(dynastyGroup.dynasty)|\(authorGroup.author)"
+                                            if expandedAuthors.contains(key) {
+                                                expandedAuthors.remove(key)
+                                            } else {
+                                                expandedAuthors.insert(key)
+                                            }
+                                        }
+                                        #endif
                                 }
                             }
+                        } label: {
+                            Text(dynastyGroup.dynasty)
+                                #if os(macOS)
+                                .font(.system(size: 16, weight: .medium))
+                                .contentShape(Rectangle())
+                                .onTapGesture(count: 2) {
+                                    if expandedDynasties.contains(dynastyGroup.dynasty) {
+                                        expandedDynasties.remove(dynastyGroup.dynasty)
+                                    } else {
+                                        expandedDynasties.insert(dynastyGroup.dynasty)
+                                    }
+                                }
+                                #endif
                         }
                     }
                 }
@@ -118,10 +167,24 @@ struct SidebarView: View {
                 ForEach(displayAlphabetSections) { section in
                     Section(header: Text(section.letter)) {
                         ForEach(section.authors) { authorGroup in
-                            DisclosureGroup(authorGroup.author) {
+                            DisclosureGroup(isExpanded: authorBinding("_alpha", authorGroup.author)) {
                                 ForEach(authorGroup.poems) { poem in
                                     poemRow(poem)
                                 }
+                            } label: {
+                                Text(authorGroup.author)
+                                    #if os(macOS)
+                                    .font(.system(size: 15))
+                                    .contentShape(Rectangle())
+                                    .onTapGesture(count: 2) {
+                                        let key = "_alpha|\(authorGroup.author)"
+                                        if expandedAuthors.contains(key) {
+                                            expandedAuthors.remove(key)
+                                        } else {
+                                            expandedAuthors.insert(key)
+                                        }
+                                    }
+                                    #endif
                             }
                         }
                     }
@@ -133,6 +196,9 @@ struct SidebarView: View {
 
     private func poemRow(_ poem: Poem) -> some View {
         Text(poem.title)
+            #if os(macOS)
+            .font(.system(size: 14))
+            #endif
             .tag(poem)
             .contextMenu {
                 Button(role: .destructive) {
@@ -144,6 +210,27 @@ struct SidebarView: View {
                     Label("删除", systemImage: "trash")
                 }
             }
+    }
+
+    private func dynastyBinding(_ dynasty: String) -> Binding<Bool> {
+        Binding(
+            get: { expandedDynasties.contains(dynasty) },
+            set: { isExpanded in
+                if isExpanded { expandedDynasties.insert(dynasty) }
+                else { expandedDynasties.remove(dynasty) }
+            }
+        )
+    }
+
+    private func authorBinding(_ prefix: String, _ author: String) -> Binding<Bool> {
+        let key = "\(prefix)|\(author)"
+        return Binding(
+            get: { expandedAuthors.contains(key) },
+            set: { isExpanded in
+                if isExpanded { expandedAuthors.insert(key) }
+                else { expandedAuthors.remove(key) }
+            }
+        )
     }
 
     private func buildDynastyGroups(from poems: [Poem]) -> [DynastyGroup] {

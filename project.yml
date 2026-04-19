@@ -3,11 +3,12 @@ options:
   bundleIdPrefix: com.miraculeux
   deploymentTarget:
     iOS: "17.0"
+    macOS: "14.0"
   xcodeVersion: "16.0"
 targets:
   XingXiangZi:
     type: application
-    platform: iOS
+    platform: [iOS, macOS]
     sources:
       - path: XingXiangZi
         excludes:
@@ -15,9 +16,9 @@ targets:
     info:
       path: XingXiangZi/Info.plist
       properties:
+        CFBundleDisplayName: 行香子
         UIBackgroundModes:
           - audio
-        CFBundleDisplayName: 行香子
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
@@ -43,5 +44,4 @@ targets:
         SWIFT_EMIT_LOC_STRINGS: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.miraculeux.XingXiangZi
         DEVELOPMENT_TEAM: ""
-        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
         SUPPORTS_MACCATALYST: NO

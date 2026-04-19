@@ -1,5 +1,11 @@
 import SwiftUI
 
+#if os(iOS)
+private let cardBackground = Color(.systemGray6)
+#else
+private let cardBackground = Color(nsColor: .controlBackgroundColor)
+#endif
+
 struct CiPaiDetailView: View {
     let cipai: CiPai
 
@@ -62,7 +68,7 @@ struct CiPaiDetailView: View {
                             .lineSpacing(6)
                             .padding(12)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(.systemGray6))
+                            .background(cardBackground)
                             .cornerRadius(8)
                     }
                 }
@@ -77,7 +83,7 @@ struct CiPaiDetailView: View {
                             .lineSpacing(6)
                             .padding(12)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(.systemGray6))
+                            .background(cardBackground)
                             .cornerRadius(8)
                     }
                 }

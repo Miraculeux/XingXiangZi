@@ -18,6 +18,9 @@ struct ContentView: View {
     @State private var selectedLanguage: SpeechLanguage = .cantonese
     @State private var sidebarGrouping: SidebarGrouping = .dynasty
     @ObservedObject private var speaker = PoemSpeaker.shared
+    #if os(macOS)
+    @Environment(\.openWindow) private var openWindow
+    #endif
 
     var body: some View {
         NavigationSplitView {
@@ -27,6 +30,9 @@ struct ContentView: View {
                 searchText: $searchText,
                 grouping: $sidebarGrouping
             )
+            #if os(macOS)
+            .frame(minWidth: 280)
+            #endif
             .toolbar {
                 //ToolbarItem(placement: .primaryAction) {
                 //    Button {
@@ -64,14 +70,22 @@ struct ContentView: View {
                         }
                         Section("词牌") {
                             Button {
+                                #if os(macOS)
+                                openWindow(id: "cipai")
+                                #else
                                 showingCiPaiList = true
+                                #endif
                             } label: {
                                 Label("词牌", systemImage: "text.book.closed")
                             }
                         }
                         Section {
                             Button {
+                                #if os(macOS)
+                                openWindow(id: "settings")
+                                #else
                                 showingSettings = true
+                                #endif
                             } label: {
                                 Label("设置", systemImage: "gearshape")
                             }
@@ -135,6 +149,7 @@ struct ContentView: View {
                 EditPoemView(dbManager: dbManager, poem: poem)
             }
         }
+        #if os(iOS)
         .sheet(isPresented: $showingCiPaiList) {
             NavigationStack {
                 CiPaiListView(dbManager: dbManager)
@@ -150,6 +165,8 @@ struct ContentView: View {
         .sheet(isPresented: $showingSettings) {
             SettingsView()
         }
+        #endif
+        #if os(iOS)
         .fullScreenCover(item: $selectedPlaylist) { playlist in
             NavigationStack {
                 PlaylistDetailView(dbManager: dbManager, playlist: playlist, onDismiss: {
@@ -157,6 +174,15 @@ struct ContentView: View {
                 })
             }
         }
+        #else
+        .sheet(item: $selectedPlaylist) { playlist in
+            NavigationStack {
+                PlaylistDetailView(dbManager: dbManager, playlist: playlist, onDismiss: {
+                    selectedPlaylist = nil
+                })
+            }
+        }
+        #endif
         .alert("新建播放列表", isPresented: $showingNewPlaylist) {
             TextField("名称", text: $newPlaylistName)
             Button("取消", role: .cancel) {

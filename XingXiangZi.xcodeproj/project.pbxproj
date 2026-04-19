@@ -7,40 +7,64 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A4C4754C82B4A38700F20CF /* AddPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */; };
-		225A6A5EA74E1D427E131D15 /* seed2.sql in Resources */ = {isa = PBXBuildFile; fileRef = 9670352D8E01CCD97810CD22 /* seed2.sql */; };
-		268400AA5869DBFE9F9111A0 /* CiPai.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A97323995415655B9D2B00 /* CiPai.swift */; };
-		30DDBFA509F04C84F38CC9DD /* AddToPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477758384C17BDD8EB69B129 /* AddToPlaylistView.swift */; };
-		3A15816AC0C1DE9C673CAF59 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62089ED790121759BF7A511B /* Playlist.swift */; };
-		3AB8384AEC3C11C2D1237C76 /* CiPaiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5D588F0113177401F800A3 /* CiPaiDetailView.swift */; };
-		43DC5F33CBCB91923EE91EE5 /* PlaylistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E5DA1A349C42AA6E89BB4E /* PlaylistViews.swift */; };
-		4707A446E3B5B278F1AA7320 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275DD5C7DA0D48395CCA3E50 /* SettingsView.swift */; };
-		4E6D2FBDFFA11A0F54512A14 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */; };
-		762B38DDE9EFB2B665D89B4E /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */; };
-		822D0506641B69D841B5F63E /* AirPlayRoutePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A82566C767850415D545D3 /* AirPlayRoutePickerView.swift */; };
-		8C5A4D0E77CA2D073646F538 /* MediaIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1F4ACE34158E7DD6BC4C68 /* MediaIntentHandler.swift */; };
-		91163F5B947D8F7ADDAD3923 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7899E60373E33109554A4ADC /* ContentView.swift */; };
-		96F80D71261583E08019E472 /* CiPaiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC42A46DBB4D9686964B2A9 /* CiPaiListView.swift */; };
-		C0CE62449B7830B139FBC7A3 /* seed_cipai.sql in Resources */ = {isa = PBXBuildFile; fileRef = 06905E53B30895370ED77C14 /* seed_cipai.sql */; };
-		CA45BE1EEB81225024E02F85 /* XingXiangZiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */; };
-		CEDF2B6385D111E2BC035E52 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94EC6042CDE9AC4AF11623B /* Library.swift */; };
-		DA0C09D6E612807BCC00BAC3 /* PoemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954B69E197849041F3CC6EA9 /* PoemDetailView.swift */; };
-		DDFFDE866AE07AEA188AEC72 /* EditPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */; };
-		E48E99376149315A3FA36831 /* LibrarySwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602EEC655E9E3A7A05BCFDAC /* LibrarySwitcherView.swift */; };
-		ED303F1AEDB4ECD11754EE85 /* Poem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D1C23B71B0E6693FEBD428 /* Poem.swift */; };
-		F7D8AC738D6D66F1D10F94F5 /* SiriIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED986817AC54EA4E763399A4 /* SiriIntents.swift */; };
-		FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD69A29BDCD7A18058790C5B /* Assets.xcassets */; };
-		FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 02F83C407A9879DA1A3446B6 /* seed.sqlite3 */; };
+		0023EE46D0D1AD3439D414BB /* CiPaiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5D588F0113177401F800A3 /* CiPaiDetailView.swift */; };
+		025625F8B45E5CD2BDE71E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7899E60373E33109554A4ADC /* ContentView.swift */; };
+		063CD38CB3818F48E7F06B55 /* seed_cipai.sql in Resources */ = {isa = PBXBuildFile; fileRef = 06905E53B30895370ED77C14 /* seed_cipai.sql */; };
+		0A4B4BB7AA831BDAE1A6D1F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD69A29BDCD7A18058790C5B /* Assets.xcassets */; };
+		19ACF330FEB83B73DB9E5E65 /* LibrarySwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602EEC655E9E3A7A05BCFDAC /* LibrarySwitcherView.swift */; };
+		1B14B1B4324DFA892C43BDFD /* CiPaiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5D588F0113177401F800A3 /* CiPaiDetailView.swift */; };
+		2C8D9CD0636F8B0B7D445DEB /* seed_cipai.sql in Resources */ = {isa = PBXBuildFile; fileRef = 06905E53B30895370ED77C14 /* seed_cipai.sql */; };
+		2CED14E3925D1507A0100238 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */; };
+		2FB973138B8EA1BE6A3603C9 /* XingXiangZiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */; };
+		353D7EFBED603E6709DC8E79 /* MediaIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1F4ACE34158E7DD6BC4C68 /* MediaIntentHandler.swift */; };
+		3B9058EA867D15652E37BFD3 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62089ED790121759BF7A511B /* Playlist.swift */; };
+		3DD74A232517F2697264DB68 /* seed.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 02F83C407A9879DA1A3446B6 /* seed.sqlite3 */; };
+		47E12F76C5FF6867832FF537 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275DD5C7DA0D48395CCA3E50 /* SettingsView.swift */; };
+		4B8971F9EDA4BAC836B5B47B /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62089ED790121759BF7A511B /* Playlist.swift */; };
+		4D1D6B3DB84B4956C964B1CA /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F390E1E29742C9AE1B9CA6 /* SidebarView.swift */; };
+		4F8F1573FE9AB005C1CC1365 /* SiriIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED986817AC54EA4E763399A4 /* SiriIntents.swift */; };
+		51578FCB3105E3FDA7C6FE98 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */; };
+		58239C241B3002CE74B7E4A8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275DD5C7DA0D48395CCA3E50 /* SettingsView.swift */; };
+		5E2871D6F61DB77D30F208D7 /* PlaylistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E5DA1A349C42AA6E89BB4E /* PlaylistViews.swift */; };
+		5E6228136D9D90C6CC93350E /* SiriIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED986817AC54EA4E763399A4 /* SiriIntents.swift */; };
+		612097407CD08D7FFC16E412 /* Poem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D1C23B71B0E6693FEBD428 /* Poem.swift */; };
+		62B1409ACF1915752B835AC6 /* AirPlayRoutePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A82566C767850415D545D3 /* AirPlayRoutePickerView.swift */; };
+		6402D656DB0D2731F7205920 /* EditPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */; };
+		68F26A397DE2F54CB1E8676C /* LibrarySwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602EEC655E9E3A7A05BCFDAC /* LibrarySwitcherView.swift */; };
+		6BF0E6D28759A7E054680299 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94EC6042CDE9AC4AF11623B /* Library.swift */; };
+		7063D80994BCA64CBD9E4EF6 /* PlaylistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E5DA1A349C42AA6E89BB4E /* PlaylistViews.swift */; };
+		74AA0DB628920EE880937B40 /* seed.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 02F83C407A9879DA1A3446B6 /* seed.sqlite3 */; };
+		7A98DFC12200C7905B56E148 /* PoemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954B69E197849041F3CC6EA9 /* PoemDetailView.swift */; };
+		853339C852ED894AF689A8A6 /* AddToPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477758384C17BDD8EB69B129 /* AddToPlaylistView.swift */; };
+		87B3EF1F0CD322C06495B86D /* CiPai.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A97323995415655B9D2B00 /* CiPai.swift */; };
+		8828AE53D768BACDBEBB78CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD69A29BDCD7A18058790C5B /* Assets.xcassets */; };
+		9361C42F5AE5228E882849AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7899E60373E33109554A4ADC /* ContentView.swift */; };
+		9EBE3E06D6680BFB54ED85AE /* AirPlayRoutePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A82566C767850415D545D3 /* AirPlayRoutePickerView.swift */; };
+		A6FD3800352511286B9EB1B0 /* AddPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */; };
+		A815F66364CD2FCA2AECBF42 /* AddToPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477758384C17BDD8EB69B129 /* AddToPlaylistView.swift */; };
+		B3C15FCDF3509094C62B0D69 /* Poem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D1C23B71B0E6693FEBD428 /* Poem.swift */; };
+		B6ED66CD0F840C465815FE5D /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94EC6042CDE9AC4AF11623B /* Library.swift */; };
+		B911255FE0411C4BF2F132C2 /* seed2.sql in Resources */ = {isa = PBXBuildFile; fileRef = 9670352D8E01CCD97810CD22 /* seed2.sql */; };
+		B9C3EF3233F6E09FA866AC44 /* XingXiangZiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */; };
+		BB1D53F90CB4E926E8237B06 /* PoemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954B69E197849041F3CC6EA9 /* PoemDetailView.swift */; };
+		BE29E14E082A15B2B631CFF1 /* seed2.sql in Resources */ = {isa = PBXBuildFile; fileRef = 9670352D8E01CCD97810CD22 /* seed2.sql */; };
+		CC0F54246D336097BEA7C1BE /* CiPai.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A97323995415655B9D2B00 /* CiPai.swift */; };
+		D7DEF9500120963E7013B648 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */; };
+		DD2CC82DDFAFCE63C9AC96A6 /* CiPaiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC42A46DBB4D9686964B2A9 /* CiPaiListView.swift */; };
+		E6D9160780126E04CC3B620C /* EditPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */; };
+		EA39F8132397B0F5E12231A7 /* CiPaiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC42A46DBB4D9686964B2A9 /* CiPaiListView.swift */; };
+		F30DC20FC2213A65A8EA61B9 /* AddPoemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */; };
+		F6A0282415001012AB6E24CD /* MediaIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1F4ACE34158E7DD6BC4C68 /* MediaIntentHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		02F83C407A9879DA1A3446B6 /* seed.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; path = seed.sqlite3; sourceTree = "<group>"; };
-		06905E53B30895370ED77C14 /* seed_cipai.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed_cipai.sql; sourceTree = "<group>"; };
+		02F83C407A9879DA1A3446B6 /* seed.sqlite3 */ = {isa = PBXFileReference; path = seed.sqlite3; sourceTree = "<group>"; };
+		06905E53B30895370ED77C14 /* seed_cipai.sql */ = {isa = PBXFileReference; path = seed_cipai.sql; sourceTree = "<group>"; };
 		22A82566C767850415D545D3 /* AirPlayRoutePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayRoutePickerView.swift; sourceTree = "<group>"; };
 		275DD5C7DA0D48395CCA3E50 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		28E5DA1A349C42AA6E89BB4E /* PlaylistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViews.swift; sourceTree = "<group>"; };
 		2B3AF342A70C5DF0EED67372 /* XingXiangZi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = XingXiangZi.entitlements; sourceTree = "<group>"; };
-		467FC9F34ED908A8BDA54532 /* XingXiangZi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BBE1E8872BE401D373154D1 /* XingXiangZi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		477758384C17BDD8EB69B129 /* AddToPlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToPlaylistView.swift; sourceTree = "<group>"; };
 		4CC42A46DBB4D9686964B2A9 /* CiPaiListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPaiListView.swift; sourceTree = "<group>"; };
 		602EEC655E9E3A7A05BCFDAC /* LibrarySwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySwitcherView.swift; sourceTree = "<group>"; };
@@ -50,12 +74,13 @@
 		6CC969197718A0C4E31B6680 /* XingXiangZiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XingXiangZiApp.swift; sourceTree = "<group>"; };
 		7899E60373E33109554A4ADC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		954B69E197849041F3CC6EA9 /* PoemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoemDetailView.swift; sourceTree = "<group>"; };
-		9670352D8E01CCD97810CD22 /* seed2.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = seed2.sql; sourceTree = "<group>"; };
+		9670352D8E01CCD97810CD22 /* seed2.sql */ = {isa = PBXFileReference; path = seed2.sql; sourceTree = "<group>"; };
 		A4D1C23B71B0E6693FEBD428 /* Poem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poem.swift; sourceTree = "<group>"; };
 		A5E2300C3080F39C11CBF0B4 /* AddPoemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPoemView.swift; sourceTree = "<group>"; };
 		A94EC6042CDE9AC4AF11623B /* Library.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
 		AD98A39E14B828B1A23E8FC0 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		B53EC0DA5FE0DEC474B332E6 /* EditPoemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPoemView.swift; sourceTree = "<group>"; };
+		C12248C25A36C4EAE0E63576 /* XingXiangZi.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = XingXiangZi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB5D588F0113177401F800A3 /* CiPaiDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiPaiDetailView.swift; sourceTree = "<group>"; };
 		CD69A29BDCD7A18058790C5B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED986817AC54EA4E763399A4 /* SiriIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriIntents.swift; sourceTree = "<group>"; };
@@ -66,7 +91,8 @@
 		57C13B19C629FAE6EB8358BB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				467FC9F34ED908A8BDA54532 /* XingXiangZi.app */,
+				C12248C25A36C4EAE0E63576 /* XingXiangZi.app */,
+				2BBE1E8872BE401D373154D1 /* XingXiangZi.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -138,22 +164,40 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		75692886BF9DA2DD9E5310F6 /* XingXiangZi */ = {
+		803BE68B68CEB281D22A8038 /* XingXiangZi_macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B6C08339821319340D6FF757 /* Build configuration list for PBXNativeTarget "XingXiangZi" */;
+			buildConfigurationList = C6127512DE4270A7CFD5D165 /* Build configuration list for PBXNativeTarget "XingXiangZi_macOS" */;
 			buildPhases = (
-				2B1DE2089BC4C280E0744816 /* Sources */,
-				150142372F3154E1D9A58548 /* Resources */,
+				732D0A387EA26E69BD330704 /* Sources */,
+				78DBB09D97831A6FC1E467AE /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = XingXiangZi;
+			name = XingXiangZi_macOS;
 			packageProductDependencies = (
 			);
-			productName = XingXiangZi;
-			productReference = 467FC9F34ED908A8BDA54532 /* XingXiangZi.app */;
+			productName = XingXiangZi_macOS;
+			productReference = 2BBE1E8872BE401D373154D1 /* XingXiangZi.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E2D600944F09D7E683B9A7CB /* XingXiangZi_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 52A8F8A2F0A24FD5E3366CCA /* Build configuration list for PBXNativeTarget "XingXiangZi_iOS" */;
+			buildPhases = (
+				C594581BC91F426E964153BA /* Sources */,
+				03A5A2BF92528BE0F6086F2E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = XingXiangZi_iOS;
+			packageProductDependencies = (
+			);
+			productName = XingXiangZi_iOS;
+			productReference = C12248C25A36C4EAE0E63576 /* XingXiangZi.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -164,6 +208,14 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					803BE68B68CEB281D22A8038 = {
+						DevelopmentTeam = "";
+					};
+					E2D600944F09D7E683B9A7CB = {
+						DevelopmentTeam = "";
+					};
+				};
 			};
 			buildConfigurationList = E35A8508F35BC2E2DE9104B6 /* Build configuration list for PBXProject "XingXiangZi" */;
 			developmentRegion = en;
@@ -179,50 +231,89 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				75692886BF9DA2DD9E5310F6 /* XingXiangZi */,
+				E2D600944F09D7E683B9A7CB /* XingXiangZi_iOS */,
+				803BE68B68CEB281D22A8038 /* XingXiangZi_macOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		150142372F3154E1D9A58548 /* Resources */ = {
+		03A5A2BF92528BE0F6086F2E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA4894588BF5E5DCF74797B1 /* Assets.xcassets in Resources */,
-				FF0EE186AA165427B3A82BC2 /* seed.sqlite3 in Resources */,
-				225A6A5EA74E1D427E131D15 /* seed2.sql in Resources */,
-				C0CE62449B7830B139FBC7A3 /* seed_cipai.sql in Resources */,
+				0A4B4BB7AA831BDAE1A6D1F8 /* Assets.xcassets in Resources */,
+				74AA0DB628920EE880937B40 /* seed.sqlite3 in Resources */,
+				B911255FE0411C4BF2F132C2 /* seed2.sql in Resources */,
+				2C8D9CD0636F8B0B7D445DEB /* seed_cipai.sql in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78DBB09D97831A6FC1E467AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8828AE53D768BACDBEBB78CF /* Assets.xcassets in Resources */,
+				3DD74A232517F2697264DB68 /* seed.sqlite3 in Resources */,
+				BE29E14E082A15B2B631CFF1 /* seed2.sql in Resources */,
+				063CD38CB3818F48E7F06B55 /* seed_cipai.sql in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2B1DE2089BC4C280E0744816 /* Sources */ = {
+		732D0A387EA26E69BD330704 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A4C4754C82B4A38700F20CF /* AddPoemView.swift in Sources */,
-				30DDBFA509F04C84F38CC9DD /* AddToPlaylistView.swift in Sources */,
-				822D0506641B69D841B5F63E /* AirPlayRoutePickerView.swift in Sources */,
-				268400AA5869DBFE9F9111A0 /* CiPai.swift in Sources */,
-				3AB8384AEC3C11C2D1237C76 /* CiPaiDetailView.swift in Sources */,
-				96F80D71261583E08019E472 /* CiPaiListView.swift in Sources */,
-				91163F5B947D8F7ADDAD3923 /* ContentView.swift in Sources */,
-				762B38DDE9EFB2B665D89B4E /* DatabaseManager.swift in Sources */,
-				DDFFDE866AE07AEA188AEC72 /* EditPoemView.swift in Sources */,
-				CEDF2B6385D111E2BC035E52 /* Library.swift in Sources */,
-				E48E99376149315A3FA36831 /* LibrarySwitcherView.swift in Sources */,
-				8C5A4D0E77CA2D073646F538 /* MediaIntentHandler.swift in Sources */,
-				3A15816AC0C1DE9C673CAF59 /* Playlist.swift in Sources */,
-				43DC5F33CBCB91923EE91EE5 /* PlaylistViews.swift in Sources */,
-				ED303F1AEDB4ECD11754EE85 /* Poem.swift in Sources */,
-				DA0C09D6E612807BCC00BAC3 /* PoemDetailView.swift in Sources */,
-				4707A446E3B5B278F1AA7320 /* SettingsView.swift in Sources */,
-				4E6D2FBDFFA11A0F54512A14 /* SidebarView.swift in Sources */,
-				F7D8AC738D6D66F1D10F94F5 /* SiriIntents.swift in Sources */,
-				CA45BE1EEB81225024E02F85 /* XingXiangZiApp.swift in Sources */,
+				A6FD3800352511286B9EB1B0 /* AddPoemView.swift in Sources */,
+				A815F66364CD2FCA2AECBF42 /* AddToPlaylistView.swift in Sources */,
+				9EBE3E06D6680BFB54ED85AE /* AirPlayRoutePickerView.swift in Sources */,
+				CC0F54246D336097BEA7C1BE /* CiPai.swift in Sources */,
+				0023EE46D0D1AD3439D414BB /* CiPaiDetailView.swift in Sources */,
+				EA39F8132397B0F5E12231A7 /* CiPaiListView.swift in Sources */,
+				025625F8B45E5CD2BDE71E51 /* ContentView.swift in Sources */,
+				D7DEF9500120963E7013B648 /* DatabaseManager.swift in Sources */,
+				E6D9160780126E04CC3B620C /* EditPoemView.swift in Sources */,
+				6BF0E6D28759A7E054680299 /* Library.swift in Sources */,
+				19ACF330FEB83B73DB9E5E65 /* LibrarySwitcherView.swift in Sources */,
+				F6A0282415001012AB6E24CD /* MediaIntentHandler.swift in Sources */,
+				3B9058EA867D15652E37BFD3 /* Playlist.swift in Sources */,
+				5E2871D6F61DB77D30F208D7 /* PlaylistViews.swift in Sources */,
+				612097407CD08D7FFC16E412 /* Poem.swift in Sources */,
+				BB1D53F90CB4E926E8237B06 /* PoemDetailView.swift in Sources */,
+				47E12F76C5FF6867832FF537 /* SettingsView.swift in Sources */,
+				4D1D6B3DB84B4956C964B1CA /* SidebarView.swift in Sources */,
+				4F8F1573FE9AB005C1CC1365 /* SiriIntents.swift in Sources */,
+				B9C3EF3233F6E09FA866AC44 /* XingXiangZiApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C594581BC91F426E964153BA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F30DC20FC2213A65A8EA61B9 /* AddPoemView.swift in Sources */,
+				853339C852ED894AF689A8A6 /* AddToPlaylistView.swift in Sources */,
+				62B1409ACF1915752B835AC6 /* AirPlayRoutePickerView.swift in Sources */,
+				87B3EF1F0CD322C06495B86D /* CiPai.swift in Sources */,
+				1B14B1B4324DFA892C43BDFD /* CiPaiDetailView.swift in Sources */,
+				DD2CC82DDFAFCE63C9AC96A6 /* CiPaiListView.swift in Sources */,
+				9361C42F5AE5228E882849AF /* ContentView.swift in Sources */,
+				51578FCB3105E3FDA7C6FE98 /* DatabaseManager.swift in Sources */,
+				6402D656DB0D2731F7205920 /* EditPoemView.swift in Sources */,
+				B6ED66CD0F840C465815FE5D /* Library.swift in Sources */,
+				68F26A397DE2F54CB1E8676C /* LibrarySwitcherView.swift in Sources */,
+				353D7EFBED603E6709DC8E79 /* MediaIntentHandler.swift in Sources */,
+				4B8971F9EDA4BAC836B5B47B /* Playlist.swift in Sources */,
+				7063D80994BCA64CBD9E4EF6 /* PlaylistViews.swift in Sources */,
+				B3C15FCDF3509094C62B0D69 /* Poem.swift in Sources */,
+				7A98DFC12200C7905B56E148 /* PoemDetailView.swift in Sources */,
+				58239C241B3002CE74B7E4A8 /* SettingsView.swift in Sources */,
+				2CED14E3925D1507A0100238 /* SidebarView.swift in Sources */,
+				5E6228136D9D90C6CC93350E /* SiriIntents.swift in Sources */,
+				2FB973138B8EA1BE6A3603C9 /* XingXiangZiApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,14 +372,104 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3E555C54173335B2FB955E66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = XingXiangZi/XingXiangZi.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = XingXiangZi/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miraculeux.XingXiangZi;
+				PRODUCT_NAME = XingXiangZi;
+				SDKROOT = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		4602AAA52B9E6265442BAEFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = XingXiangZi/XingXiangZi.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = XingXiangZi/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miraculeux.XingXiangZi;
+				PRODUCT_NAME = XingXiangZi;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		67348197FFAF6B41B17FDD06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = XingXiangZi/XingXiangZi.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = XingXiangZi/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miraculeux.XingXiangZi;
+				PRODUCT_NAME = XingXiangZi;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B6D965A20125805FB1FB790D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = XingXiangZi/XingXiangZi.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = XingXiangZi/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.miraculeux.XingXiangZi;
+				PRODUCT_NAME = XingXiangZi;
+				SDKROOT = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Debug;
 		};
@@ -338,70 +519,33 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
-		F9FDBA55CEAD521AE77BB68C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = XingXiangZi/XingXiangZi.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7PAQPQ4423;
-				INFOPLIST_FILE = XingXiangZi/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.miraculeux.XingXiangZi;
-				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		FA359B345657FD991521C3DC /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = XingXiangZi/XingXiangZi.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7PAQPQ4423;
-				INFOPLIST_FILE = XingXiangZi/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.miraculeux.XingXiangZi;
-				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B6C08339821319340D6FF757 /* Build configuration list for PBXNativeTarget "XingXiangZi" */ = {
+		52A8F8A2F0A24FD5E3366CCA /* Build configuration list for PBXNativeTarget "XingXiangZi_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F9FDBA55CEAD521AE77BB68C /* Debug */,
-				FA359B345657FD991521C3DC /* Release */,
+				4602AAA52B9E6265442BAEFB /* Debug */,
+				67348197FFAF6B41B17FDD06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C6127512DE4270A7CFD5D165 /* Build configuration list for PBXNativeTarget "XingXiangZi_macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B6D965A20125805FB1FB790D /* Debug */,
+				3E555C54173335B2FB955E66 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

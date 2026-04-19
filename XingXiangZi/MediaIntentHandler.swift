@@ -1,3 +1,4 @@
+#if os(iOS)
 import Foundation
 import Intents
 
@@ -72,3 +73,4 @@ final class MediaIntentHandler: NSObject, INPlayMediaIntentHandling {
         return INPlayMediaIntentResponse(code: .success, userActivity: nil)
     }
 }
+#endif

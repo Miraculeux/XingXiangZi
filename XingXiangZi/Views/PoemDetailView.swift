@@ -446,12 +446,14 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         // Force lazy synthesizer initialization (sets delegate)
         _ = synthesizer
 
+        #if os(iOS)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleInterruption),
             name: AVAudioSession.interruptionNotification,
             object: AVAudioSession.sharedInstance()
         )
+        #endif
     }
 
     deinit {
@@ -461,6 +463,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
     // MARK: - Audio Session & Engine
 
     private func setupAudioSession() {
+        #if os(iOS)
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(.playback, mode: .spokenAudio, options: [])
@@ -468,6 +471,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         } catch {
             print("[TTS] session error: \(error)")
         }
+        #endif
     }
 
     private func startEngine() {
@@ -486,6 +490,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
         }
     }
 
+    #if os(iOS)
     @objc private func handleInterruption(_ notification: Notification) {
         guard let info = notification.userInfo,
               let typeValue = info[AVAudioSessionInterruptionTypeKey] as? UInt,
@@ -522,6 +527,7 @@ final class PoemSpeaker: NSObject, ObservableObject, @preconcurrency AVSpeechSyn
             break
         }
     }
+    #endif
 
     // MARK: - Remote Commands
 

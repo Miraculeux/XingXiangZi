@@ -1,4 +1,6 @@
 import SwiftUI
+
+#if os(iOS)
 import UIKit
 
 /// A UIKit-based left-edge swipe recognizer that works alongside List/ScrollView gestures
@@ -53,6 +55,23 @@ private struct EdgeSwipeView: UIViewRepresentable {
         }
     }
 }
+#else
+/// A swipe-from-left-edge gesture modifier for macOS navigation
+private struct EdgeSwipeModifier: ViewModifier {
+    var onSwipe: () -> Void
+
+    func body(content: Content) -> some View {
+        content.gesture(
+            DragGesture(minimumDistance: 50)
+                .onEnded { value in
+                    if value.startLocation.x < 30 && value.translation.width > 80 {
+                        onSwipe()
+                    }
+                }
+        )
+    }
+}
+#endif
 
 extension View {
     func edgeSwipeBack(action: @escaping () -> Void) -> some View {
